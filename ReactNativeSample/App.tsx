@@ -15,8 +15,10 @@ export default function App() {
   const Stack = createNativeStackNavigator();
 
   useEffect(() => {
-    Hoppr.init("DEFAULT", "TestApiKey2", "TestOpUserId", {
+    Hoppr.init("YOUR_API_KEY", "ReactNativeSdkTestUser", {
       userLevel: "Beginner",
+      age: 36,
+      premium: true,
       location: {
         country: "US",
         city: "New York",

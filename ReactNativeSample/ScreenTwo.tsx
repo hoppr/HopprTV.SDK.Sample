@@ -1,34 +1,26 @@
 import { View, Text, Button } from 'react-native';
 import { useEffect } from 'react';
+import Hoppr from 'react-native-hoppr';
+import { HopprTrigger } from 'react-native-hoppr';
 
 export function ScreenTwo() {
+  var screenData = {
+    screenName: "SreenTwo",
+    stringValue: "sampleString",
+    numberValue: 12345,
+    floatValue: 98.76,
+    booleanValue: true,
+    nullValue: null,
+    undefinedValue: undefined
+  };
+
   useEffect(() => {
-    // Hoppr.trigger(HopprTrigger.ON_SCREEN_ENTER, {
-    //   screenName: "MovieSynopsis",
-    //   title: "SuperMan",
-    //   rating: 5.2,
-    //   genre: "Action",
-    //   isPopular: true,
-    //   cast: ["Actor1", "Actor2"], 
-    //   description: null
-    // });
+    Hoppr.trigger(HopprTrigger.ON_SCREEN_ENTER, screenData);
     
     return () => {
-      // Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, {
-      //   screenName: "MovieSynopsis"
-      // })
+      Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, screenData)
     };
   })
-  
-    const playClick = async() => {
-      
-      // await Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, {
-      //   id: "MovieSynopsisPlay"
-      // })
-
-      console.log("Trigger action completed")
-      // Perform Intended Action
-    };
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

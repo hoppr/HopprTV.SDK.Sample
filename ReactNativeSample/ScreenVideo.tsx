@@ -1,13 +1,18 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Video from 'react-native-video';
+import Hoppr from 'react-native-hoppr';
+import { HopprTrigger } from 'react-native-hoppr';
 
 export function ScreenVideo() {
-  useEffect(() => {
-    // Logic to handle side effects or start actions when the screen is entered can go here
+  var screenData = {
+    screenName: "ScreenVideo"
+  };
 
+  useEffect(() => {
+    Hoppr.trigger(HopprTrigger.ON_SCREEN_ENTER, screenData);
     return () => {
-      // Cleanup logic when the component is unmounted
+      Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, screenData);
     };
   }, []);
 
