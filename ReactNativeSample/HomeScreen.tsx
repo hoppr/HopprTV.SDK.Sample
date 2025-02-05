@@ -4,9 +4,22 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Hoppr, { HopprTrigger } from 'react-native-hoppr';
+import { useEffect } from 'react';
 
 export function HomeScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+
+  var screenData = {
+    screenName: "HomeScreen",
+  };
+
+  useEffect(() => {
+    Hoppr.trigger(HopprTrigger.ON_SCREEN_ENTER, screenData);
+
+    return () => {
+      Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, screenData)
+    };
+  });
 
   const navigateToScreen = async (screenName: string) => {
     await Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, {

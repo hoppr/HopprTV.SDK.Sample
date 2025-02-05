@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Video from 'react-native-video';
-import Hoppr from 'react-native-hoppr';
-import { HopprTrigger } from 'react-native-hoppr';
+import Hoppr, { HopprTrigger } from 'react-native-hoppr';
 
 export function ScreenVideo() {
   var screenData = {

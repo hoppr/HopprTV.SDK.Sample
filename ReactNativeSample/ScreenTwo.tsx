@@ -1,7 +1,6 @@
 import { View, Text, Button } from 'react-native';
 import { useEffect } from 'react';
-import Hoppr from 'react-native-hoppr';
-import { HopprTrigger } from 'react-native-hoppr';
+import Hoppr, { HopprTrigger } from 'react-native-hoppr';
 
 export function ScreenTwo() {
   var screenData = {

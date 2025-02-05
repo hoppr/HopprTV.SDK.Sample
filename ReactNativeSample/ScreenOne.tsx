@@ -1,7 +1,6 @@
 import { View, Text, Button, Alert } from 'react-native';
 import { useEffect } from 'react';
-import Hoppr from 'react-native-hoppr';
-import { HopprTrigger } from 'react-native-hoppr';
+import Hoppr, { HopprTrigger } from 'react-native-hoppr';
 
 export function ScreenOne() {
   var screenData = {
@@ -38,9 +37,11 @@ export function ScreenOne() {
     };
   });
 
-  const clickButton = async (buttonName: string) => {
-    await Hoppr.trigger("ShowToastClick", {})
-    // navigation.navigate(screenName);
+  const clickButton = async (buttonName: string, buttonNumber: number) => {
+    await Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, {
+      buttonId: buttonName,
+      buttonNumber: buttonNumber
+    })
     Alert.alert('Button pressed ' + buttonName);
   };
 
@@ -50,21 +51,21 @@ export function ScreenOne() {
 
       <View style={{ marginBottom: 10 }}>
         <Button
-          onPress={() => clickButton("buttonOne")}
+          onPress={() => clickButton("buttonOne", 1)}
           title="Button One"
         />
       </View>
 
       <View style={{ marginBottom: 10 }}>
         <Button
-          onPress={() => clickButton("buttonTwo")}
+          onPress={() => clickButton("buttonTwo", 2)}
           title="Button Two"
         />
       </View>
 
       <View style={{ marginBottom: 10 }}>
         <Button
-          onPress={() => clickButton("buttonThree")}
+          onPress={() => clickButton("buttonThree", 3)}
           title="Button Three"
         />
       </View>

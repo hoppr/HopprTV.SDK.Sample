@@ -1,7 +1,6 @@
 import { View, Text, Button } from 'react-native';
 import { useEffect } from 'react';
-import Hoppr from 'react-native-hoppr';
-import { HopprTrigger } from 'react-native-hoppr';
+import Hoppr, { HopprTrigger } from 'react-native-hoppr';
 
 export function ScreenThree() {
   var screenData = {
@@ -12,7 +11,7 @@ export function ScreenThree() {
     mixedArray: ["text", 42, false, null, { key: "value" }],
     emptyArray: []
   };
-  
+
   useEffect(() => {
     Hoppr.trigger(HopprTrigger.ON_SCREEN_ENTER, screenData);
     
