@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import Hoppr, { HopprTrigger } from 'react-native-hoppr';
 
 export function ScreenThree() {
-  var screenData = {
+  const screenData = {
     screenName: "ScreenThree",
     stringArray: ["one", "two", "three"],
     numberArray: [1, 2, 3, 4.5],
@@ -20,7 +20,7 @@ export function ScreenThree() {
       return () => {
         Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, screenData);
       };
-    }, [screenData])
+    }, [])
   );
   
     const playClick = async() => {

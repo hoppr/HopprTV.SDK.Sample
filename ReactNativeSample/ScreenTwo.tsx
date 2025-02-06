@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import Hoppr, { HopprTrigger } from 'react-native-hoppr';
 
 export function ScreenTwo() {
-  var screenData = {
+  const screenData = {
     screenName: "SreenTwo",
     stringValue: "sampleString",
     numberValue: 12345,
@@ -21,7 +21,7 @@ export function ScreenTwo() {
       return () => {
         Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, screenData);
       };
-    }, [screenData])
+    }, [])
   );
 
   return (

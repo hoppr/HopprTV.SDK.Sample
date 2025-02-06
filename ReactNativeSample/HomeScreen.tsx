@@ -11,9 +11,7 @@ import { useEffect } from 'react';
 export function HomeScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
-  var screenData = {
-    screenName: "HomeScreen",
-  };
+  const screenData = { screenName: "HomeScreen" };
 
   useFocusEffect(
     useCallback(() => {
@@ -22,7 +20,7 @@ export function HomeScreen() {
       return () => {
         Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, screenData);
       };
-    }, [screenData])
+    }, [])
   );
 
   const navigateToScreen = async (screenName: string) => {

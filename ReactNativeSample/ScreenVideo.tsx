@@ -6,7 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 
 export function ScreenVideo() {
-  var screenData = {
+  const screenData = {
     screenName: "ScreenVideo"
   };
 
@@ -17,7 +17,7 @@ export function ScreenVideo() {
       return () => {
         Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, screenData);
       };
-    }, [screenData])
+    }, [])
   );
 
   return (

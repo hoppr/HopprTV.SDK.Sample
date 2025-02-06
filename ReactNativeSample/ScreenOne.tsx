@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import Hoppr, { HopprTrigger } from 'react-native-hoppr';
 
 export function ScreenOne() {
-  var screenData = {
+  const screenData = {
     screenName: "ScreenOne",
     simpleObject: { key1: "value1", key2: 42, key3: false },
     id: 12345,
@@ -37,7 +37,7 @@ export function ScreenOne() {
       return () => {
         Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, screenData);
       };
-    }, [screenData])
+    }, [])
   );
 
   const clickButton = async (buttonName: string, buttonNumber: number) => {
