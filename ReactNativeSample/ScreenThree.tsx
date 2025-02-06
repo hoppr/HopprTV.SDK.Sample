@@ -1,5 +1,6 @@
 import { View, Text, Button } from 'react-native';
-import { useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 import Hoppr, { HopprTrigger } from 'react-native-hoppr';
 
 export function ScreenThree() {
@@ -12,13 +13,15 @@ export function ScreenThree() {
     emptyArray: []
   };
 
-  useEffect(() => {
-    Hoppr.trigger(HopprTrigger.ON_SCREEN_ENTER, screenData);
-    
-    return () => {
-      Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, screenData)
-    };
-  })
+  useFocusEffect(
+    useCallback(() => {
+      Hoppr.trigger(HopprTrigger.ON_SCREEN_ENTER, screenData);
+  
+      return () => {
+        Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, screenData);
+      };
+    }, [screenData])
+  );
   
     const playClick = async() => {
       await Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, {

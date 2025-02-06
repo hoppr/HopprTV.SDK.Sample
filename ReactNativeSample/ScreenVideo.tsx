@@ -1,19 +1,24 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Video from 'react-native-video';
 import Hoppr, { HopprTrigger } from 'react-native-hoppr';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 export function ScreenVideo() {
   var screenData = {
     screenName: "ScreenVideo"
   };
 
-  useEffect(() => {
-    Hoppr.trigger(HopprTrigger.ON_SCREEN_ENTER, screenData);
-    return () => {
-      Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, screenData);
-    };
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      Hoppr.trigger(HopprTrigger.ON_SCREEN_ENTER, screenData);
+  
+      return () => {
+        Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, screenData);
+      };
+    }, [screenData])
+  );
 
   return (
     <View style={styles.container}>
