@@ -22,15 +22,6 @@ export function ScreenThree() {
       };
     }, [])
   );
-  
-    const playClick = async() => {
-      await Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, {
-        id: "MovieSynopsisPlay"
-      })
-
-      console.log("Trigger action completed")
-      // Perform Intended Action
-    };
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

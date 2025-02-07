@@ -5,7 +5,7 @@ import Hoppr, { HopprTrigger } from 'react-native-hoppr';
 
 export function ScreenTwo() {
   const screenData = {
-    screenName: "SreenTwo",
+    screenName: "ScreenTwo",
     stringValue: "sampleString",
     numberValue: 12345,
     floatValue: 98.76,
