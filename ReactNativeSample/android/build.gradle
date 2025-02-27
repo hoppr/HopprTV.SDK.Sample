@@ -21,7 +21,7 @@ buildscript {
 allprojects {
  repositories {
    maven {
-     url "https://asia-maven.pkg.dev/hoppr-androidtv-dev/hoppr-android-sdk-dev"
+     url "https://us-central1-maven.pkg.dev/hoppr-androidtv-dev/android-sdk"
    }
    mavenCentral()
    google()
