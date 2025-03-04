@@ -42,7 +42,7 @@ stages:
               rm -rf node_modules android/.gradle android/app/build
               npm install --frozen-lockfile
             displayName: 'Clean and Install Dependencies'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/ReactNative'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/ReactNativeSample'
 
           - template: ./templates/bundleBuild.yml
             parameters:
