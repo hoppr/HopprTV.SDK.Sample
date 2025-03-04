@@ -17,7 +17,7 @@ parameters:
     type: string
     default: "4.0"
     
-name: "RELEASE v${{ parameters.versionName }}"
+name: "RELEASE Android RN v${{ parameters.versionName }}"
 stages:
   - stage: Build
     jobs:
@@ -38,9 +38,9 @@ stages:
 
           - template: ./templates/bundleBuild.yml
             parameters:
-              workingDirectory: 'app'
+              workingDirectory: 'ReactNativeSample/android/app'
               gradleTask: 'assembleRelease'
-              publishPath: 'app/build/outputs/apk'
+              publishPath: 'ReactNativeSample/android/app/build/outputs/apk'
               publishName: "Hoppr-RN-Android ${{ parameters.versionName }}"
 
           - script: |
