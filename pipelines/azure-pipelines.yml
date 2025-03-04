@@ -17,7 +17,7 @@ parameters:
     type: string
     default: "4.0"
     
-name: "RELEASE Android RN v${{ parameters.versionName }}"
+name: "RELEASE RN-Android v${{ parameters.versionName }}"
 stages:
   - stage: Build
     jobs:
@@ -26,9 +26,9 @@ stages:
           - checkout: self
             persistCredentials: true
 
-          - template: ./templates/setVersion.yml
-            parameters:
-              versionName: '${{ parameters.versionName }}'
+          # - template: ./templates/setVersion.yml
+          #   parameters:
+          #     versionName: '${{ parameters.versionName }}'
 
           - task: JavaToolInstaller@0
             inputs:
