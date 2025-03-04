@@ -36,6 +36,13 @@ stages:
               jdkArchitectureOption: 'x64'
               jdkSourceOption: 'PreInstalled'
 
+          # Clean old dependencies and install fresh ones
+          - script: |
+              cd ReactNativeSample
+              rm -rf node_modules android/.gradle android/app/build
+              npm install --frozen-lockfile
+            displayName: 'Clean and Install Dependencies'
+
           - template: ./templates/bundleBuild.yml
             parameters:
               workingDirectory: '$(System.DefaultWorkingDirectory)/ReactNativeSample/android'
