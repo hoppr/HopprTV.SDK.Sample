@@ -23,8 +23,8 @@ stages:
     jobs:
       - job: Build_RELEASE
         steps:
-          # - checkout: self
-          #   persistCredentials: true
+          - checkout: self
+            persistCredentials: true
 
           # - template: ./templates/setVersion.yml
           #   parameters:
