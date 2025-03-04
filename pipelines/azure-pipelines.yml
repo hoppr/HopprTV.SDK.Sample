@@ -44,7 +44,7 @@ stages:
           - script: |
               cd ReactNativeSample
               rm -rf node_modules android/.gradle android/app/build
-              HOPPR_APP_KEY="YOUR_APP_KEY_HERE" npm install --frozen-lockfile
+              HOPPR_APP_KEY="${{ parameters.appKey }}"" npm install --frozen-lockfile
             displayName: 'Clean and Install Dependencies'
             workingDirectory: '$(System.DefaultWorkingDirectory)/ReactNativeSample'
 
