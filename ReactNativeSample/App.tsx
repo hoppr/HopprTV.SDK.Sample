@@ -8,7 +8,8 @@ import { ScreenTwo } from './ScreenTwo';
 import { ScreenThree } from './ScreenThree';
 import { ScreenVideo } from './ScreenVideo';
 import Hoppr from 'react-native-hoppr';
-import { Config } from './Config';
+// import { Config } from './Config';
+const APP_KEY = process.env.HOPPR_APP_KEY || "DEFAULT_APP_KEY";
 
 export default function App() {
   const [result, setResult] = useState<number | undefined>();
@@ -16,7 +17,7 @@ export default function App() {
   const Stack = createNativeStackNavigator();
 
   useEffect(() => {
-    Hoppr.init(Config.APP_KEY, "ReactNativeSdkTestUser", {
+    Hoppr.init(APP_KEY, "ReactNativeSdkTestUser", {
       userLevel: "Beginner",
       age: 36,
       premium: true,

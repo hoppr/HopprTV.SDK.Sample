@@ -16,6 +16,10 @@ parameters:
     displayName: 'Version Number'
     type: string
     default: "4.0"
+  - name: appKey
+    displayName: 'App Key'
+    type: string
+    default: ""
     
 name: "RELEASE RN-Android v${{ parameters.versionName }}"
 stages:
@@ -40,7 +44,7 @@ stages:
           - script: |
               cd ReactNativeSample
               rm -rf node_modules android/.gradle android/app/build
-              npm install --frozen-lockfile
+              HOPPR_APP_KEY="YOUR_APP_KEY_HERE" npm install --frozen-lockfile
             displayName: 'Clean and Install Dependencies'
             workingDirectory: '$(System.DefaultWorkingDirectory)/ReactNativeSample'
 
