@@ -1,0 +1,54 @@
+# ON MASTER COMMIT:
+# 1. BUILDS ALL VERSIONS OF PROD THAT WE CARE ABOUT
+# 2. PUBLISHES THOSE BUILDS TO GITHUB
+# 3. GENERATES RELEASE NOTES
+# 4. TAGS RELEASE IN GITHUB
+# 5. SENDS OUT RELEASE EMAIL? (MAYBE)
+
+pr: none
+trigger: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+parameters:
+  - name: versionName
+    displayName: 'Version Number'
+    type: string
+    default: "4.0"
+    
+name: "RELEASE v${{ parameters.versionName }}"
+stages:
+  - stage: Build
+    jobs:
+      - job: Build_RELEASE
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - template: ./templates/setVersion.yml
+            parameters:
+              versionName: '${{ parameters.versionName }}'
+
+          - task: JavaToolInstaller@0
+            inputs:
+              versionSpec: '17'
+              jdkArchitectureOption: 'x64'
+              jdkSourceOption: 'PreInstalled'
+
+          - template: ./templates/bundleBuild.yml
+            parameters:
+              workingDirectory: 'app'
+              gradleTask: 'assembleRelease'
+              publishPath: 'app/build/outputs/apk'
+              publishName: "Hoppr-RN-Android ${{ parameters.versionName }}"
+
+          - script: |
+              versionName="${{ parameters.versionName }}"
+              
+              git config --global user.email "@azure@pipelines.com"
+              git config --global user.name "Release Pipeline"  
+
+              git tag v$versionName
+              git push origin tag v$versionName
+            displayName: 'Tag Release Commit'
