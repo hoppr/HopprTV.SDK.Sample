@@ -38,7 +38,7 @@ stages:
 
           - template: ./templates/bundleBuild.yml
             parameters:
-              workingDirectory: 'ReactNativeSample/android/app'
+              workingDirectory: 'ReactNativeSample/android'
               gradleTask: 'assembleRelease'
               publishPath: 'ReactNativeSample/android/app/build/outputs/apk'
               publishName: "Hoppr-RN-Android ${{ parameters.versionName }}"
