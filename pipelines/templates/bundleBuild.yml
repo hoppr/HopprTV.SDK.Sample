@@ -16,9 +16,9 @@ steps:
     inputs:
       workingDirectory: ${{ parameters.workingDirectory }}
       gradleWrapperFile: 'gradlew'
-      gradleOptions: '-Xmx3072m'
+      # gradleOptions: '-Xmx3072m'
       publishJUnitResults: false
-      testResultsFiles: '**/TEST-*.xml'
+      # testResultsFiles: '**/TEST-*.xml'
       tasks: ${{ parameters.gradleTask }}
 
   - task: CopyFiles@2
