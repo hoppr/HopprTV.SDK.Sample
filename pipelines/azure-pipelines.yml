@@ -43,7 +43,8 @@ stages:
           # Clean old dependencies and install fresh ones
           - script: |
               rm -rf node_modules android/.gradle android/app/build
-              HOPPR_APP_KEY="${{ parameters.appKey }}" npm install --frozen-lockfile
+              echo "HOPPR_APP_KEY=${{ parameters.appKey }}" > .env
+              npm install --frozen-lockfile
             displayName: 'Clean and Install Dependencies'
             workingDirectory: '$(System.DefaultWorkingDirectory)/ReactNativeSample'
           - template: ./templates/bundleBuild.yml
