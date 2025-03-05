@@ -16,6 +16,8 @@
 
 package com.google.jetstream.data.entities
 
+import androidx.core.os.bundleOf
+
 data class MovieDetails(
     val id: String,
     val videoUri: String,
@@ -37,4 +39,41 @@ data class MovieDetails(
     val revenue: String,
     val similarMovies: MovieList,
     val reviewsAndRatings: List<MovieReviewsAndRatings>
-)
+){
+    fun toBundle() = bundleOf().apply {
+        putString("movieName", name)
+        putString("movieDuration", duration)
+        putString("movieReleaseDate", releaseDate)
+        putString("movieMusic", music)
+        putString("moviePgRating", pgRating)
+        putString("movieBudget", budget)
+        putString("movieDescription", description)
+        putString("movieDirector", director)
+        putString("movieId", id)
+        putString("movieOriginalLanguage", originalLanguage)
+        putString("movieRevenue", revenue)
+        putString("movieScreenPlay", screenplay)
+        putString("movieStatus", status)
+        putParcelableArray(
+            "movieCastAndCrew",
+            castAndCrew.map { bundleOf().apply {
+                this.putString("id", it.id)
+                this.putString("realName", it.realName)
+                this.putString("characterName", it.characterName)
+            } }.toTypedArray()
+        )
+        putStringArray("movieCategories", categories.toTypedArray())
+        putParcelableArray(
+            "movieReviewsAndRatings",
+            reviewsAndRatings.map { bundleOf().apply {
+                this.putString("reviewerName", it.reviewerName)
+                this.putString("reviewCount", it.reviewCount)
+                this.putString("reviewRating", it.reviewRating)
+            } }.toTypedArray()
+        )
+        putStringArray(
+            "movieSimilarMovies",
+            similarMovies.map { it.name }.toTypedArray()
+        )
+    }
+}

@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation.screens.categories
 
+import android.os.Bundle
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
@@ -46,11 +47,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.data.entities.MovieCategoryList
 import com.google.jetstream.presentation.common.Loading
 import com.google.jetstream.presentation.common.MovieCard
 import com.google.jetstream.presentation.screens.dashboard.rememberChildPadding
 import com.google.jetstream.presentation.utils.GradientBg
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 
 @Composable
 fun CategoriesScreen(
@@ -88,6 +91,11 @@ private fun Catalog(
     onCategoryClick: (categoryId: String) -> Unit,
     onScroll: (isTopBarVisible: Boolean) -> Unit,
 ) {
+    ObserveHopprScreen(Bundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "categories")
+        putInt("categoriesCount", movieCategories.size)
+    })
+
     val childPadding = rememberChildPadding()
     val lazyGridState = rememberLazyGridState()
     val shouldShowTopBar by remember {

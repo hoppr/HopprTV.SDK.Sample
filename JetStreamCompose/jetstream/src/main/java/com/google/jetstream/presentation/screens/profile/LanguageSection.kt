@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation.screens.profile
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -30,15 +31,21 @@ import androidx.tv.material3.ListItemDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import androidx.tv.material3.surfaceColorAtElevation
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.R
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.theme.JetStreamCardShape
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 
 @Composable
 fun LanguageSection(
     selectedIndex: Int,
     onSelectedIndexChange: (currentIndex: Int) -> Unit
 ) {
+    ObserveHopprScreen(Bundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "language")
+    })
+
     with(StringConstants.Composable.Placeholders) {
         LazyColumn(modifier = Modifier.padding(horizontal = 72.dp)) {
             item {

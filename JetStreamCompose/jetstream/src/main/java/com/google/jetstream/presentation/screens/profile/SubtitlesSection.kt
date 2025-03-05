@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation.screens.profile
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -28,14 +29,19 @@ import androidx.tv.material3.Switch
 import androidx.tv.material3.SwitchDefaults
 import androidx.tv.material3.Text
 import androidx.tv.material3.surfaceColorAtElevation
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.theme.JetStreamCardShape
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 
 @Composable
 fun SubtitlesSection(
     isSubtitlesChecked: Boolean,
     onSubtitleCheckChange: (isChecked: Boolean) -> Unit
 ) {
+    ObserveHopprScreen(Bundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "subtitles")
+    })
     with(StringConstants.Composable.Placeholders) {
         Column(modifier = Modifier.padding(horizontal = 72.dp)) {
             Text(

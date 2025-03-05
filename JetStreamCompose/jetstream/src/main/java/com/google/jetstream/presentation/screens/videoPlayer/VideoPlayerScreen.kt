@@ -41,6 +41,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.compose.PlayerSurface
 import androidx.media3.ui.compose.SURFACE_TYPE_TEXTURE_VIEW
 import androidx.media3.ui.compose.modifiers.resizeWithContentScale
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.presentation.common.Error
 import com.google.jetstream.presentation.common.Loading
@@ -55,6 +56,7 @@ import com.google.jetstream.presentation.screens.videoPlayer.components.remember
 import com.google.jetstream.presentation.screens.videoPlayer.components.rememberVideoPlayerPulseState
 import com.google.jetstream.presentation.screens.videoPlayer.components.rememberVideoPlayerState
 import com.google.jetstream.presentation.utils.handleDPadKeyEvents
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 import kotlinx.coroutines.delay
 
 object VideoPlayerScreen {
@@ -96,6 +98,10 @@ fun VideoPlayerScreen(
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayerScreenContent(movieDetails: MovieDetails, onBackPressed: () -> Unit) {
+    ObserveHopprScreen(movieDetails.toBundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "player")
+    })
+
     val exoPlayer = rememberPlayer(LocalContext.current)
 
     val videoPlayerState = rememberVideoPlayerState(

@@ -18,6 +18,7 @@ package com.google.jetstream.presentation.screens.profile
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Bundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,10 +33,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.data.util.StringConstants
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 
 @Composable
 fun AboutSection() {
+    ObserveHopprScreen(Bundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "about")
+    })
     val context = LocalContext.current
     val versionNumber = remember(context) {
         context.getVersionNumber()

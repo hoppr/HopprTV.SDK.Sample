@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation.screens.search
 
+import android.os.Bundle
 import android.view.KeyEvent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
@@ -58,12 +59,14 @@ import androidx.tv.material3.LocalContentColor
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.presentation.common.MoviesRow
 import com.google.jetstream.presentation.screens.dashboard.rememberChildPadding
 import com.google.jetstream.presentation.theme.JetStreamCardShape
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 
 @Composable
 fun SearchScreen(
@@ -71,6 +74,10 @@ fun SearchScreen(
     onScroll: (isTopBarVisible: Boolean) -> Unit,
     searchScreenViewModel: SearchScreenViewModel = hiltViewModel(),
 ) {
+    ObserveHopprScreen(Bundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "search")
+    })
+
     val lazyColumnState = rememberLazyListState()
     val shouldShowTopBar by remember {
         derivedStateOf {

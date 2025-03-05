@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation.screens.home
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,6 +36,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.data.util.StringConstants
@@ -42,6 +44,7 @@ import com.google.jetstream.presentation.common.Error
 import com.google.jetstream.presentation.common.Loading
 import com.google.jetstream.presentation.common.MoviesRow
 import com.google.jetstream.presentation.screens.dashboard.rememberChildPadding
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 
 @Composable
 fun HomeScreen(
@@ -85,6 +88,10 @@ private fun Catalog(
     modifier: Modifier = Modifier,
     isTopBarVisible: Boolean = true,
 ) {
+    ObserveHopprScreen(Bundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "home")
+        putInt("featuredMoviesCount", featuredMovies.size)
+    })
 
     val lazyListState = rememberLazyListState()
     val childPadding = rememberChildPadding()

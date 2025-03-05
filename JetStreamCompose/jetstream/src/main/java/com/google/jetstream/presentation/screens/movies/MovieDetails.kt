@@ -53,11 +53,13 @@ import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.screens.dashboard.rememberChildPadding
 import com.google.jetstream.presentation.theme.JetStreamButtonShape
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -66,6 +68,10 @@ fun MovieDetails(
     movieDetails: MovieDetails,
     goToMoviePlayer: () -> Unit
 ) {
+    ObserveHopprScreen(movieDetails.toBundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "movieSynopsis")
+    })
+
     val childPadding = rememberChildPadding()
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()

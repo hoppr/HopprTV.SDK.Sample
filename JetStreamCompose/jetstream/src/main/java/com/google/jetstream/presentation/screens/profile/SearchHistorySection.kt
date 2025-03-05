@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation.screens.profile
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,11 +30,16 @@ import androidx.tv.material3.ListItem
 import androidx.tv.material3.ListItemDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.theme.JetStreamCardShape
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 
 @Composable
 fun SearchHistorySection() {
+    ObserveHopprScreen(Bundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "searchHistory")
+    })
     with(StringConstants.Composable.Placeholders) {
         LazyColumn(modifier = Modifier.padding(horizontal = 72.dp)) {
             item {

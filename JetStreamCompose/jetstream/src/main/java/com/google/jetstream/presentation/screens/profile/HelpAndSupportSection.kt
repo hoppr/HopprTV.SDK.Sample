@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation.screens.profile
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,12 +32,17 @@ import androidx.tv.material3.ListItemDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import androidx.tv.material3.surfaceColorAtElevation
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.theme.JetStreamCardShape
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun HelpAndSupportSection() {
+    ObserveHopprScreen(Bundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "helpAndSupport")
+    })
     with(StringConstants.Composable.Placeholders) {
         Column(modifier = Modifier.padding(horizontal = 72.dp)) {
             Text(

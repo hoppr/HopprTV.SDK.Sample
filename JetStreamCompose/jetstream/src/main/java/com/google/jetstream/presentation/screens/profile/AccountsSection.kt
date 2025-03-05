@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation.screens.profile
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -31,8 +32,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.screens.dashboard.rememberChildPadding
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 
 @Immutable
 data class AccountsSectionData(
@@ -43,6 +46,9 @@ data class AccountsSectionData(
 
 @Composable
 fun AccountsSection() {
+    ObserveHopprScreen(Bundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "accounts")
+    })
     val childPadding = rememberChildPadding()
     var showDeleteDialog by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }

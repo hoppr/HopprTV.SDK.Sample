@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation.screens.shows
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.data.util.StringConstants
@@ -37,6 +39,7 @@ import com.google.jetstream.presentation.common.Loading
 import com.google.jetstream.presentation.common.MoviesRow
 import com.google.jetstream.presentation.screens.dashboard.rememberChildPadding
 import com.google.jetstream.presentation.screens.movies.MoviesScreenMovieList
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 
 @Composable
 fun ShowsScreen(
@@ -73,6 +76,11 @@ private fun Catalog(
     isTopBarVisible: Boolean,
     modifier: Modifier = Modifier
 ) {
+    ObserveHopprScreen(Bundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "shows")
+        putInt("tvShowCount", tvShowList.size)
+    })
+
     val childPadding = rememberChildPadding()
     val lazyListState = rememberLazyListState()
     val shouldShowTopBar by remember {

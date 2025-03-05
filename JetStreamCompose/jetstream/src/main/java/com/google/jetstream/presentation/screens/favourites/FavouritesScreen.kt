@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation.screens.favourites
 
+import android.os.Bundle
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,9 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.presentation.common.Loading
 import com.google.jetstream.presentation.screens.dashboard.rememberChildPadding
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 
 @Composable
 fun FavouritesScreen(
@@ -73,6 +76,11 @@ private fun Catalog(
     isTopBarVisible: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    ObserveHopprScreen(Bundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "favourites")
+        putInt("favouriteMovieListCount", favouriteMovieList.size)
+    })
+
     val childPadding = rememberChildPadding()
     val filteredMoviesGridState = rememberLazyGridState()
     val shouldShowTopBar by remember {

@@ -16,14 +16,18 @@
 
 package com.google.jetstream.presentation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.jetstream.presentation.screens.Screens
@@ -39,6 +43,21 @@ fun App(
 
     val navController = rememberNavController()
     var isComingBackFromDifferentScreen by remember { mutableStateOf(false) }
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+
+    LaunchedEffect(currentBackStackEntry) {
+        val route = currentBackStackEntry?.destination?.route
+        Log.d("NavigationTracker", "Navigated to: $route")
+
+        when {
+            route?.startsWith(Screens.MovieDetails()) == true -> {
+                Log.d("NavigationTracker", "Entered Movie Details Screen")
+            }
+            currentBackStackEntry?.destination?.hierarchy?.none { it.route == Screens.MovieDetails() } == true -> {
+                Log.d("NavigationTracker", "Exited Movie Details Screen")
+            }
+        }
+    }
 
     NavHost(
         navController = navController,
