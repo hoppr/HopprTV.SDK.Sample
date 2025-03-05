@@ -1,0 +1,48 @@
+# RUNS A BUILD AND PUBLISHES THE ARTIFACTS
+
+parameters:
+  - name: workingDirectory
+    type: string
+  - name: gradleTask
+    type: string
+  - name: publishPath
+    type: string
+  - name: publishName
+    type: string
+
+steps:
+  - task: Gradle@2
+    displayName: "Build ${{ parameters.publishName }}"
+    inputs:
+      workingDirectory: ${{ parameters.workingDirectory }}
+      gradleWrapperFile: '${{ parameters.workingDirectory }}/gradlew'
+      # gradleOptions: '-Xmx3072m'
+      publishJUnitResults: false
+      # testResultsFiles: '**/TEST-*.xml'
+      tasks: ${{ parameters.gradleTask }}
+
+  - task: CopyFiles@2
+    displayName: "Copy HopprTV APK to release"
+    inputs:
+      sourceFolder: "${{ parameters.publishPath }}"
+      targetFolder: "$(Build.ArtifactStagingDirectory)/release/${{ parameters.publishName }}"
+
+  # - task: CopyFiles@2
+  #   displayName: "Copy Release Scripts to release"
+  #   inputs:
+  #     sourceFolder: 'release'
+  #     targetFolder: "$(Build.ArtifactStagingDirectory)/release/${{ parameters.publishName }}/scripts"
+
+  - task: ArchiveFiles@2
+    displayName: 'Package Release Folder To Zip'
+    inputs:
+      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/release/${{ parameters.publishName }}'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: "$(Build.ArtifactStagingDirectory)/${{ parameters.publishName }}.zip"
+      replaceExistingArchive: true
+      verbose: true
+
+  - publish: '$(Build.ArtifactStagingDirectory)/${{ parameters.publishName }}.zip'
+    displayName: 'Publish ${{ parameters.publishName }}'
+    artifact: '${{ parameters.publishName }}'

@@ -1,0 +1,57 @@
+# SETS THE VERSION NUMBERS OF:
+# - VERSION.TXT
+# - VERSION.JSON
+
+parameters:
+  - name: versionName
+    displayName: 'Version Number'
+    type: string
+    default: "4.0"
+
+#  - name: major
+#    type: string
+#  - name: minor
+#    type: string
+#  - name: build
+#    type: string
+#    default: 0
+#  - name: patch
+#    type: string
+#    default: 0
+
+steps:
+  - script: |
+      # Use the version number passed as a parameter
+      versionName="${{ parameters.versionName }}"
+      # Split the version into an array
+      IFS='.' read -r -a versionArray <<< "$versionName"
+      # Set default values if not provided
+      major=${versionArray[0]:-0}
+      minor=${versionArray[1]:-0}
+      build=${versionArray[2]:-0}
+      patch=${versionArray[3]:-0}
+      # Output the values (you can use these in further steps)
+      echo "Major: $major"
+      echo "Minor: $minor"
+      echo "Build: $build"
+      echo "Patch: $patch"
+      # Define a regex to ensure at least two numbers (major.minor) are provided
+      # and allow up to four (major.minor.build.patch)
+      version_regex="^[0-9]+\.[0-9]+(\.[0-9]+){0,2}$"
+      # Check if the version string matches the regex
+      if [[ ! $versionName =~ $version_regex ]]; then
+      echo "Error: Version Name must contain at least two numbers (e.g., major.minor) and be in the format of major.minor[.build[.patch]]."
+      exit 1  # Exit with a non-zero status to fail the pipeline
+      fi
+      versionCode="${major}$(printf "%02d" $minor)$(printf "%02d" $build)$(printf "%02d" $patch)"
+      
+      versionJson="{ \
+      \"versionName\":\"$versionName\", \
+      \"versionCode\":$versionCode, \
+      \"inherit\": true \
+      }"
+      
+      echo "versionJson: ${versionJson}"
+      echo "${versionJson}" > ./release/version.json
+      echo "${versionName}" > ./release/version.txt
+    displayName: "Set Version"
