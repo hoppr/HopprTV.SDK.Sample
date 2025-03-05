@@ -17,6 +17,7 @@
 package com.google.jetstream.presentation.screens.dashboard
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -91,6 +92,7 @@ fun DashboardTopBar(
             UserAvatar(
                 modifier = Modifier
                     .size(32.dp)
+                    .clickable(onClick = {  onScreenSelection(Screens.Profile) })
                     .focusRequester(focusRequesters[0])
                     .semantics {
                         contentDescription =

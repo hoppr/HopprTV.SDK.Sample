@@ -48,6 +48,7 @@ hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt-android" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 androidx-rules = { group = "androidx.test", name = "rules", version.ref = "rules" }
+hoppr-android = { module = "com.hoppr:hoppr-android", version = "latest.release"  }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }

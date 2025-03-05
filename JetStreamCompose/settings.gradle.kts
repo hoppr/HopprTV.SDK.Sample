@@ -26,6 +26,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url = uri("https://us-central1-maven.pkg.dev/hoppr-androidtv-dev/android-sdk/")
+        }
     }
 }
 rootProject.name = "JetStream"

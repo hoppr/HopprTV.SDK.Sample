@@ -42,7 +42,7 @@ fun MovieCard(
         imageCard = {
             Surface(
                 onClick = onClick,
-//                modifier = Modifier.clickable(onClick = onClick), // Ensure touch works
+                modifier = Modifier.clickable(onClick = onClick), // Ensure touch works
                 shape = ClickableSurfaceDefaults.shape(JetStreamCardShape),
                 border = ClickableSurfaceDefaults.border(
                     focusedBorder = Border(

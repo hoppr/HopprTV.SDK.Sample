@@ -17,16 +17,41 @@
 package com.google.jetstream
 
 import android.app.Application
+import android.os.Bundle
+import androidx.core.os.bundleOf
 import com.google.jetstream.data.repositories.MovieRepository
 import com.google.jetstream.data.repositories.MovieRepositoryImpl
+import com.hoppr.hopprtvandroid.Hoppr
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.components.SingletonComponent
+import java.util.UUID
 
 @HiltAndroidApp
-class JetStreamApplication : Application()
+class JetStreamApplication : Application(){
+    override fun onCreate() {
+        super.onCreate()
+
+        val dev = "URg1C7IDyYAscqXirvmjp-Ax87ld5syOtxV6BopZYF6TSaE_7-CJg8VU8HWl7TIZzlzOgTgLYsOIkzZ-vZ7-gQ"
+
+        Hoppr.init(
+            this,
+            userId = UUID.randomUUID().toString(),
+            appKey = dev,
+            metadata = Bundle().apply {
+                this.putString("userLevel", "Beginner")
+                this.putBoolean("isPaidUser", true)
+                this.putInt("userAge", 36)
+                this.putBundle("userDetails", bundleOf().apply {
+                    putString("email", "john.smith@gmail.com")
+                    putString("firstName", "John")
+                    putString("lastName", "Smith")
+                })
+            })
+    }
+}
 
 @InstallIn(SingletonComponent::class)
 @Module
