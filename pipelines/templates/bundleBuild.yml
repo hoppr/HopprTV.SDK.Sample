@@ -9,6 +9,8 @@ parameters:
     type: string
   - name: publishName
     type: string
+  - name: versionName
+    type: string
 
 steps:
   - task: Gradle@2
@@ -25,7 +27,7 @@ steps:
     displayName: "Copy HopprTV APK to release"
     inputs:
       sourceFolder: "${{ parameters.publishPath }}"
-      targetFolder: "$(Build.ArtifactStagingDirectory)/release/${{ parameters.publishName }}"
+      targetFolder: "$(Build.ArtifactStagingDirectory)/release-${{ parameters.versionName }}/${{ parameters.publishName }}"
 
   # - task: CopyFiles@2
   #   displayName: "Copy Release Scripts to release"
@@ -36,7 +38,7 @@ steps:
   - task: ArchiveFiles@2
     displayName: 'Package Release Folder To Zip'
     inputs:
-      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/release/${{ parameters.publishName }}'
+      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/release-${{ parameters.versionName }}/${{ parameters.publishName }}'
       includeRootFolder: false
       archiveType: 'zip'
       archiveFile: "$(Build.ArtifactStagingDirectory)/${{ parameters.publishName }}.zip"
