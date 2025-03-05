@@ -66,7 +66,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MovieDetails(
     movieDetails: MovieDetails,
-    goToMoviePlayer: () -> Unit
+    goToMoviePlayer: (movieDetails: MovieDetails) -> Unit
 ) {
     ObserveHopprScreen(movieDetails.toBundle().apply {
         putString(HopprParameter.SCREEN_NAME, "movieSynopsis")
@@ -119,6 +119,7 @@ fun MovieDetails(
                             coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
                         }
                     },
+                    movieDetails = movieDetails,
                     goToMoviePlayer = goToMoviePlayer
                 )
             }
@@ -129,10 +130,11 @@ fun MovieDetails(
 @Composable
 private fun WatchTrailerButton(
     modifier: Modifier = Modifier,
-    goToMoviePlayer: () -> Unit
+    goToMoviePlayer: (movieDetails: MovieDetails) -> Unit,
+    movieDetails: MovieDetails
 ) {
     Button(
-        onClick = goToMoviePlayer,
+        onClick = { goToMoviePlayer(movieDetails) } ,
         modifier = modifier.padding(top = 24.dp),
         contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
         shape = ButtonDefaults.shape(shape = JetStreamButtonShape)

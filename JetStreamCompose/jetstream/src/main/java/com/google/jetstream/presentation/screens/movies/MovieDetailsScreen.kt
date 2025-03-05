@@ -53,7 +53,7 @@ object MovieDetailsScreen {
 
 @Composable
 fun MovieDetailsScreen(
-    goToMoviePlayer: () -> Unit,
+    goToMoviePlayer: (movieDetails: MovieDetails) -> Unit,
     onBackPressed: () -> Unit,
     refreshScreenWithNewMovie: (Movie) -> Unit,
     movieDetailsScreenViewModel: MovieDetailsScreenViewModel = hiltViewModel()
@@ -86,7 +86,7 @@ fun MovieDetailsScreen(
 @Composable
 private fun Details(
     movieDetails: MovieDetails,
-    goToMoviePlayer: () -> Unit,
+    goToMoviePlayer: (movieDetails: MovieDetails) -> Unit,
     onBackPressed: () -> Unit,
     refreshScreenWithNewMovie: (Movie) -> Unit,
     modifier: Modifier = Modifier,

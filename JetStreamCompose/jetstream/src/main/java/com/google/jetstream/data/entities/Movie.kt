@@ -16,6 +16,7 @@
 
 package com.google.jetstream.data.entities
 
+import androidx.core.os.bundleOf
 import com.google.jetstream.data.models.MoviesResponseItem
 
 data class Movie(
@@ -25,7 +26,13 @@ data class Movie(
     val posterUri: String,
     val name: String,
     val description: String
-)
+){
+    fun toBundle() = bundleOf().apply {
+        this.putString("movieId", id)
+        this.putString("movieName", name)
+        this.putString("movieDescription", description)
+    }
+}
 
 fun MoviesResponseItem.toMovie(thumbnailType: ThumbnailType = ThumbnailType.Standard): Movie {
     val thumbnail = when (thumbnailType) {

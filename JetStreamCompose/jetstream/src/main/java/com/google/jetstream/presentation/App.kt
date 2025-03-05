@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.core.os.bundleOf
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -35,6 +36,9 @@ import com.google.jetstream.presentation.screens.categories.CategoryMovieListScr
 import com.google.jetstream.presentation.screens.dashboard.DashboardScreen
 import com.google.jetstream.presentation.screens.movies.MovieDetailsScreen
 import com.google.jetstream.presentation.screens.videoPlayer.VideoPlayerScreen
+import com.hoppr.hopprtvandroid.Hoppr
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
+import com.hoppr.hopprtvandroid.core.model.HopprTrigger
 
 @Composable
 fun App(
@@ -94,7 +98,11 @@ fun App(
             ) {
                 MovieDetailsScreen(
                     goToMoviePlayer = {
-                        navController.navigate(Screens.VideoPlayer())
+                        Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, it.toBundle().apply {
+                            this.putString(HopprParameter.BUTTON_ID, "SynopsisWatchTrailer")
+                        }) {
+                            navController.navigate(Screens.VideoPlayer())
+                        }
                     },
                     refreshScreenWithNewMovie = { movie ->
                         navController.navigate(
@@ -125,7 +133,11 @@ fun App(
                         )
                     },
                     openVideoPlayer = {
-                        navController.navigate(Screens.VideoPlayer())
+                        Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, it.toBundle().apply {
+                            this.putString(HopprParameter.BUTTON_ID, "DashboardWatchTrailer")
+                        }) {
+                            navController.navigate(Screens.VideoPlayer())
+                        }
                     },
                     onBackPressed = onBackPressed,
                     isComingBackFromDifferentScreen = isComingBackFromDifferentScreen,
