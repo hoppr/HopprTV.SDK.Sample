@@ -41,10 +41,10 @@ https://www.apache.org/licenses/LICENSE-2.0
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
-        <!-- Enable profiling by macrobenchmark -->
-        <profileable
-            android:shell="true"
-            tools:targetApi="31" />
+<!--        &lt;!&ndash; Enable profiling by macrobenchmark &ndash;&gt;-->
+<!--        <profileable-->
+<!--            android:shell="true"-->
+<!--            tools:targetApi="31" />-->
 
         <activity
             android:name=".MainActivity"

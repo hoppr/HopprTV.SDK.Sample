@@ -114,8 +114,8 @@ dependencies {
     implementation(libs.hoppr.android)
 
     // Compose Previews
-    debugImplementation(libs.androidx.compose.ui.tooling)
+//    debugImplementation(libs.androidx.compose.ui.tooling)
 
     // For baseline profile generation
-    baselineProfile(project(":benchmark"))
+//    baselineProfile(project(":benchmark"))
 }
