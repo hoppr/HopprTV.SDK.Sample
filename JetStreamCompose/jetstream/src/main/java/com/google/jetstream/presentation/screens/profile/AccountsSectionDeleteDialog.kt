@@ -23,12 +23,16 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import com.google.jetstream.R
 import com.google.jetstream.presentation.theme.JetStreamCardShape
 import com.google.jetstream.tvmaterial.StandardDialog
+import com.hoppr.hopprtvandroid.Hoppr
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
+import com.hoppr.hopprtvandroid.core.model.HopprTrigger
 
 @OptIn(
     ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class,
@@ -49,7 +53,13 @@ fun AccountsSectionDeleteDialog(
                 modifier = Modifier.padding(start = 8.dp),
                 text = stringResource(R.string.yes_delete_account),
                 shouldRequestFocus = true,
-                onClick = onDismissRequest
+                onClick = {
+                    Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, bundleOf().apply {
+                        this.putString(HopprParameter.BUTTON_ID, "DeleteAccountYes")
+                    }) {
+                        onDismissRequest()
+                    }
+                }
             )
         },
         dismissButton = {
@@ -57,7 +67,13 @@ fun AccountsSectionDeleteDialog(
                 modifier = Modifier.padding(end = 8.dp),
                 text = stringResource(R.string.no_keep_it),
                 shouldRequestFocus = false,
-                onClick = onDismissRequest
+                onClick = {
+                    Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, bundleOf().apply {
+                        this.putString(HopprParameter.BUTTON_ID, "DeleteAccountNo")
+                    }) {
+                        onDismissRequest()
+                    }
+                }
             )
         },
         title = {

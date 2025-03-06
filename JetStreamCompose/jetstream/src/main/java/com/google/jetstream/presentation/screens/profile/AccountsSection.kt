@@ -32,10 +32,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.data.util.StringConstants
+import com.google.jetstream.presentation.screens.Screens
 import com.google.jetstream.presentation.screens.dashboard.rememberChildPadding
+import com.hoppr.hopprtvandroid.Hoppr
 import com.hoppr.hopprtvandroid.core.model.HopprParameter
+import com.hoppr.hopprtvandroid.core.model.HopprTrigger
 
 @Immutable
 data class AccountsSectionData(
@@ -77,7 +81,13 @@ fun AccountsSection() {
             ),
             AccountsSectionData(
                 title = StringConstants.Composable.Placeholders.AccountsSelectionDeleteAccountTitle,
-                onClick = { showDeleteDialog = true }
+                onClick = {
+                    Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, bundleOf().apply {
+                        this.putString(HopprParameter.BUTTON_ID, "DeleteAccount")
+                    }) {
+                        showDeleteDialog = true
+                    }
+                }
             )
         )
     }
