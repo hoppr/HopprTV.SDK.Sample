@@ -82,9 +82,13 @@ fun App(
                         }
                     },
                     onMovieSelected = { movie ->
-                        navController.navigate(
-                            Screens.MovieDetails.withArgs(movie.id)
-                        )
+                        Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, movie.toBundle().apply {
+                            this.putString(HopprParameter.BUTTON_ID, "OpenMovieDetails")
+                        }) {
+                            navController.navigate(
+                                Screens.MovieDetails.withArgs(movie.id)
+                            )
+                        }
                     }
                 )
             }
@@ -99,7 +103,7 @@ fun App(
                 MovieDetailsScreen(
                     goToMoviePlayer = {
                         Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, it.toBundle().apply {
-                            this.putString(HopprParameter.BUTTON_ID, "SynopsisWatchTrailer")
+                            this.putString(HopprParameter.BUTTON_ID, "WatchTrailer")
                         }) {
                             navController.navigate(Screens.VideoPlayer())
                         }
@@ -123,18 +127,28 @@ fun App(
             composable(route = Screens.Dashboard()) {
                 DashboardScreen(
                     openCategoryMovieList = { categoryId ->
-                        navController.navigate(
-                            Screens.CategoryMovieList.withArgs(categoryId)
-                        )
+                        Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, bundleOf().apply {
+                            this.putString(HopprParameter.BUTTON_ID, "OpenCategory")
+                            this.putString("categoryId", categoryId)
+                        }){
+                            navController.navigate(
+                                Screens.CategoryMovieList.withArgs(categoryId)
+                            )
+                        }
                     },
                     openMovieDetailsScreen = { movieId ->
-                        navController.navigate(
-                            Screens.MovieDetails.withArgs(movieId)
-                        )
+                        Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, bundleOf().apply {
+                            this.putString(HopprParameter.BUTTON_ID, "OpenMovieDetails")
+                            this.putString("movieId", movieId)
+                        }){
+                            navController.navigate(
+                                Screens.MovieDetails.withArgs(movieId)
+                            )
+                        }
                     },
-                    openVideoPlayer = {
-                        Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, it.toBundle().apply {
-                            this.putString(HopprParameter.BUTTON_ID, "DashboardWatchTrailer")
+                    openVideoPlayer = { movie ->
+                        Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, movie.toBundle().apply {
+                            this.putString(HopprParameter.BUTTON_ID, "OpenVideoPlayer")
                         }) {
                             navController.navigate(Screens.VideoPlayer())
                         }

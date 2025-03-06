@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.tv.material3.Border
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.FilterChip
@@ -42,6 +43,9 @@ import androidx.tv.material3.ProvideTextStyle
 import androidx.tv.material3.Text
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.theme.JetStreamCardShape
+import com.hoppr.hopprtvandroid.Hoppr
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
+import com.hoppr.hopprtvandroid.core.model.HopprTrigger
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
@@ -69,14 +73,21 @@ fun MovieFilterChip(
                 else
                     Modifier
             ),
-        onClick = { onCheckedChange(!isChecked) },
+        onClick = {
+            Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, bundleOf().apply {
+                this.putString(HopprParameter.BUTTON_ID, "UpdateMovieFilter")
+                this.putString("filterLabel", label)
+            }) {
+                onCheckedChange(!isChecked)
+            }
+        },
         selected = isChecked,
         leadingIcon = {
             AnimatedVisibility(visible = isChecked) {
                 Icon(
                     Icons.Default.Check,
                     contentDescription =
-                    StringConstants.Composable.ContentDescription.FilterSelected,
+                        StringConstants.Composable.ContentDescription.FilterSelected,
                     modifier = Modifier.size(16.dp)
                 )
             }
