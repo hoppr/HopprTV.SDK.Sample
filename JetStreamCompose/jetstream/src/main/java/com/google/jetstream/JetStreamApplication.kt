@@ -34,12 +34,12 @@ class JetStreamApplication : Application(){
     override fun onCreate() {
         super.onCreate()
 
-        val dev = "URg1C7IDyYAscqXirvmjp-Ax87ld5syOtxV6BopZYF6TSaE_7-CJg8VU8HWl7TIZzlzOgTgLYsOIkzZ-vZ7-gQ"
+//        val dev = "URg1C7IDyYAscqXirvmjp-Ax87ld5syOtxV6BopZYF6TSaE_7-CJg8VU8HWl7TIZzlzOgTgLYsOIkzZ-vZ7-gQ"
 
         Hoppr.init(
             this,
             userId = UUID.randomUUID().toString(),
-            appKey = dev,
+            appKey = BuildConfig.APP_KEY,
             metadata = Bundle().apply {
                 this.putString("userLevel", "Beginner")
                 this.putBoolean("isPaidUser", true)

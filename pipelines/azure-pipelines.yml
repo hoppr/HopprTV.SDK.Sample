@@ -58,6 +58,7 @@ stages:
               publishPath: '$(System.DefaultWorkingDirectory)/JetStreamCompose/jetstream/build/outputs/apk'
               publishName: "Hoppr-JetStream-Android ${{ parameters.versionName }}"
               versionName: "${{ parameters.versionName }}"
+              appKey: "${{ parameters.appKey }}"
 
           - template: ./templates/bundleBuild.yml
             parameters:

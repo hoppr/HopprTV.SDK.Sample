@@ -43,6 +43,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "APP_KEY","\"${project.findProperty("appKey") ?: "defaultValue"}\"")
     }
 
     buildTypes {
