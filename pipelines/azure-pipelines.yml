@@ -44,6 +44,7 @@ stages:
           - script: |
               npm config list
               rm -rf node_modules android/.gradle android/app/build
+              rm package-lock.json
               echo "HOPPR_APP_KEY=${{ parameters.appKey }}" > .env
               npm cache clean --force
               npm install --frozen-lockfile
