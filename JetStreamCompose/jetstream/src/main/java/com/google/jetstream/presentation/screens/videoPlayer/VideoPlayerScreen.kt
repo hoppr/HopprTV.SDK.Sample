@@ -110,10 +110,6 @@ fun VideoPlayerScreenContent(movieDetails: MovieDetails, onBackPressed: () -> Un
         hideSeconds = 4,
     )
 
-    Hoppr.trigger("ON_PLAY_MOVIE", movieDetails.toBundle()){
-        exoPlayer.play()
-    }
-
     LaunchedEffect(exoPlayer, movieDetails) {
         exoPlayer.setMediaItem(
             MediaItem.Builder()
@@ -133,7 +129,11 @@ fun VideoPlayerScreenContent(movieDetails: MovieDetails, onBackPressed: () -> Un
                     }
                 ).build()
         )
-        exoPlayer.prepare()
+
+        Hoppr.trigger("ON_PLAY_MOVIE", movieDetails.toBundle()){
+            exoPlayer.prepare()
+            exoPlayer.play()
+        }
     }
 
     var contentCurrentPosition by remember { mutableLongStateOf(0L) }
