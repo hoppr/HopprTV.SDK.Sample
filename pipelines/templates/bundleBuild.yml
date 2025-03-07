@@ -21,12 +21,11 @@ steps:
     inputs:
       workingDirectory: ${{ parameters.workingDirectory }}
       gradleWrapperFile: '${{ parameters.workingDirectory }}/gradlew'
-      gradleOptions: "-PappKey=${{ parameters.appKey }})"
       # gradleOptions: '-Xmx3072m'
       publishJUnitResults: false
       # testResultsFiles: '**/TEST-*.xml'
       tasks: ${{ parameters.gradleTask }}
-      options: '-PappKey=MySecretAppKey'
+      options: '-PappKey=${{ parameters.appKey }})'
 
   - task: CopyFiles@2
     displayName: "Copy HopprTV APK to release"
