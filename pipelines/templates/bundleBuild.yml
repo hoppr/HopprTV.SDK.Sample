@@ -13,6 +13,7 @@ parameters:
     type: string
   - name: appKey
     type: string
+    default: ""
 
 steps:
   - task: Gradle@2
