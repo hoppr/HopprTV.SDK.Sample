@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Video from 'react-native-video';
-import Hoppr, { HopprTrigger } from 'react-native-hoppr';
+import Hoppr, { HopprTrigger } from '@hoppr/react-native-hoppr';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 

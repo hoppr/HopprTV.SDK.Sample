@@ -1,7 +1,7 @@
 import { View, Text, Button, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
-import Hoppr, { HopprTrigger } from 'react-native-hoppr';
+import Hoppr, { HopprTrigger } from '@hoppr/react-native-hoppr';
 
 export function ScreenOne() {
   const screenData = {

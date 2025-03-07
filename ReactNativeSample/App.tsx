@@ -7,8 +7,8 @@ import { ScreenOne } from './ScreenOne';
 import { ScreenTwo } from './ScreenTwo';
 import { ScreenThree } from './ScreenThree';
 import { ScreenVideo } from './ScreenVideo';
-import Hoppr from 'react-native-hoppr';
 import Config from "react-native-config";
+import Hoppr from '@hoppr/react-native-hoppr';
 
 export default function App() {
   const [result, setResult] = useState<number | undefined>();

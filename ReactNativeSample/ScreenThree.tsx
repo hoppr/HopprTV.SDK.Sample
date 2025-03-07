@@ -1,7 +1,7 @@
 import { View, Text, Button } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
-import Hoppr, { HopprTrigger } from 'react-native-hoppr';
+import Hoppr, { HopprTrigger } from '@hoppr/react-native-hoppr';
 
 export function ScreenThree() {
   const screenData = {

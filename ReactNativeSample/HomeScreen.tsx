@@ -3,7 +3,7 @@ import {
   useNavigation, ParamListBase
 } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import Hoppr, { HopprTrigger } from 'react-native-hoppr';
+import Hoppr, { HopprTrigger } from '@hoppr/react-native-hoppr';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
