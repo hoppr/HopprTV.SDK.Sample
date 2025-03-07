@@ -51,6 +51,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -66,6 +67,7 @@ import com.google.jetstream.presentation.screens.profile.ProfileScreen
 import com.google.jetstream.presentation.screens.search.SearchScreen
 import com.google.jetstream.presentation.screens.shows.ShowsScreen
 import com.google.jetstream.presentation.utils.Padding
+import com.hoppr.hopprtvandroid.Hoppr
 
 val ParentPadding = PaddingValues(vertical = 16.dp, horizontal = 58.dp)
 
@@ -180,6 +182,9 @@ fun DashboardScreen(
                 ),
             selectedTabIndex = currentTopBarSelectedTabIndex,
         ) { screen ->
+            Hoppr.trigger("ON_TAB_SELECTED", bundleOf().apply {
+                putString("tabName", screen.name)
+            })
             navController.navigate(screen()) {
                 if (screen == TopBarTabs[0]) popUpTo(TopBarTabs[0].invoke())
                 launchSingleTop = true

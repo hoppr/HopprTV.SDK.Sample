@@ -38,7 +38,7 @@ fun rememberPlayer(context: Context) = remember {
         .setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
         .build()
         .apply {
-            playWhenReady = true
+//            playWhenReady = true
             repeatMode = Player.REPEAT_MODE_ONE
         }
 }

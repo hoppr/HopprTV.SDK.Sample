@@ -46,7 +46,7 @@ stages:
               rm -rf node_modules android/.gradle android/app/build
               echo "HOPPR_APP_KEY=${{ parameters.appKey }}" > .env
               npm cache clean --force
-              npm install --frozen-lockfile --registry=https://us-central1-npm.pkg.dev/hoppr-androidtv-dev/react-native-sdk/
+              npm install --frozen-lockfile
             displayName: 'Clean and Install Dependencies'
             workingDirectory: '$(System.DefaultWorkingDirectory)/ReactNativeSample'
           - template: ./templates/bundleBuild.yml

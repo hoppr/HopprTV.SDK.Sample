@@ -56,6 +56,7 @@ import com.google.jetstream.presentation.screens.videoPlayer.components.remember
 import com.google.jetstream.presentation.screens.videoPlayer.components.rememberVideoPlayerPulseState
 import com.google.jetstream.presentation.screens.videoPlayer.components.rememberVideoPlayerState
 import com.google.jetstream.presentation.utils.handleDPadKeyEvents
+import com.hoppr.hopprtvandroid.Hoppr
 import com.hoppr.hopprtvandroid.core.model.HopprParameter
 import kotlinx.coroutines.delay
 
@@ -108,6 +109,10 @@ fun VideoPlayerScreenContent(movieDetails: MovieDetails, onBackPressed: () -> Un
         exoPlayer = exoPlayer,
         hideSeconds = 4,
     )
+
+    Hoppr.trigger("ON_PLAY_MOVIE", movieDetails.toBundle()){
+        exoPlayer.play()
+    }
 
     LaunchedEffect(exoPlayer, movieDetails) {
         exoPlayer.setMediaItem(
