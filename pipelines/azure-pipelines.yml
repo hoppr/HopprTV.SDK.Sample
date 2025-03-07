@@ -57,7 +57,7 @@ stages:
 
           - template: ./templates/bundleBuild.yml
             parameters:
-              workingDirectory: '$(System.DefaultWorkingDirectory)/JetStreamCompose/android'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/JetStreamCompose'
               gradleTask: 'assembleRelease'
               publishPath: '$(System.DefaultWorkingDirectory)/JetStreamCompose/jetstream/build/outputs/apk'
               publishName: "Hoppr-JetStream-Android ${{ parameters.versionName }}"
