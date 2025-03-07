@@ -26,6 +26,7 @@ steps:
       publishJUnitResults: false
       # testResultsFiles: '**/TEST-*.xml'
       tasks: ${{ parameters.gradleTask }}
+      options: '-PappKey=MySecretAppKey'
 
   - task: CopyFiles@2
     displayName: "Copy HopprTV APK to release"
