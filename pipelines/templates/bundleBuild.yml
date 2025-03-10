@@ -11,6 +11,9 @@ parameters:
     type: string
   - name: versionName
     type: string
+  - name: appKey
+    type: string
+    default: ""
 
 steps:
   - task: Gradle@2
@@ -22,6 +25,7 @@ steps:
       publishJUnitResults: false
       # testResultsFiles: '**/TEST-*.xml'
       tasks: ${{ parameters.gradleTask }}
+      options: '-PappKey=${{ parameters.appKey }})'
 
   - task: CopyFiles@2
     displayName: "Copy HopprTV APK to release"

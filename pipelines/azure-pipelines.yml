@@ -16,8 +16,12 @@ parameters:
     displayName: 'Version Number'
     type: string
     default: "4.0"
-  - name: appKey
-    displayName: 'App Key'
+  - name: reactNativeAppKey
+    displayName: 'RN App Key'
+    type: string
+    default: ""
+  - name: jetStreamAppKey
+    displayName: 'JetStream App Key'
     type: string
     default: ""
 
@@ -45,11 +49,21 @@ stages:
               npm config list
               rm -rf node_modules android/.gradle android/app/build
               rm package-lock.json
-              echo "HOPPR_APP_KEY=${{ parameters.appKey }}" > .env
+              echo "HOPPR_APP_KEY=${{ parameters.reactNativeAppKey }}" > .env
               npm cache clean --force
               npm install --frozen-lockfile
             displayName: 'Clean and Install Dependencies'
             workingDirectory: '$(System.DefaultWorkingDirectory)/ReactNativeSample'
+
+          - template: ./templates/bundleBuild.yml
+            parameters:
+              workingDirectory: '$(System.DefaultWorkingDirectory)/JetStreamCompose'
+              gradleTask: 'assembleRelease'
+              publishPath: '$(System.DefaultWorkingDirectory)/JetStreamCompose/jetstream/build/outputs/apk'
+              publishName: "Hoppr-JetStream-Android ${{ parameters.versionName }}"
+              versionName: "${{ parameters.versionName }}"
+              appKey: "${{ parameters.jetStreamAppKey }}"
+
           - template: ./templates/bundleBuild.yml
             parameters:
               workingDirectory: '$(System.DefaultWorkingDirectory)/ReactNativeSample/android'

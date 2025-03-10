@@ -1,3 +1,5 @@
+import java.util.Properties
+
 /*
  * Copyright 2023 Google LLC
  *
@@ -32,6 +34,8 @@ android {
     // Needed for latest androidx snapshot build
     compileSdk = 35
 
+
+
     defaultConfig {
         applicationId = "com.google.jetstream"
         minSdk = 28
@@ -43,6 +47,17 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val props = Properties()
+        val localPropsFile = rootProject.file("local.properties")
+        if (localPropsFile.exists()) {
+            localPropsFile.inputStream().use { props.load(it) }
+        }
+
+        val localAppKey = props.getProperty("appKey", "defaultValue")
+
+        // fetch app key for properties and if not found fetch from local.properties
+        buildConfigField("String", "APP_KEY","\"${project.findProperty("appKey") ?: localAppKey}\"")
     }
 
     buildTypes {

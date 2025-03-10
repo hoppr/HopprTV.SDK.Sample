@@ -18,6 +18,7 @@ package com.google.jetstream
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import androidx.core.os.bundleOf
 import com.google.jetstream.data.repositories.MovieRepository
 import com.google.jetstream.data.repositories.MovieRepositoryImpl
@@ -34,12 +35,10 @@ class JetStreamApplication : Application(){
     override fun onCreate() {
         super.onCreate()
 
-        val dev = "URg1C7IDyYAscqXirvmjp-Ax87ld5syOtxV6BopZYF6TSaE_7-CJg8VU8HWl7TIZzlzOgTgLYsOIkzZ-vZ7-gQ"
-
         Hoppr.init(
             this,
             userId = UUID.randomUUID().toString(),
-            appKey = dev,
+            appKey = BuildConfig.APP_KEY,
             metadata = Bundle().apply {
                 this.putString("userLevel", "Beginner")
                 this.putBoolean("isPaidUser", true)
