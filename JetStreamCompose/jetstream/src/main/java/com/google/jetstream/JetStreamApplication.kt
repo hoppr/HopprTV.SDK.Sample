@@ -35,7 +35,6 @@ class JetStreamApplication : Application(){
     override fun onCreate() {
         super.onCreate()
 
-        Log.d("maxdebug", "BuildConfig.APP_KEY ${BuildConfig.APP_KEY}")
         Hoppr.init(
             this,
             userId = UUID.randomUUID().toString(),
