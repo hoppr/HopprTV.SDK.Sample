@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation.screens.categories
 
+import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
+import com.google.jetstream.ObserveHopprScreen
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieCategoryDetails
 import com.google.jetstream.presentation.common.Error
@@ -46,6 +48,7 @@ import com.google.jetstream.presentation.common.PosterImage
 import com.google.jetstream.presentation.screens.dashboard.rememberChildPadding
 import com.google.jetstream.presentation.theme.JetStreamBottomListPadding
 import com.google.jetstream.presentation.utils.focusOnInitialVisibility
+import com.hoppr.hopprtvandroid.core.model.HopprParameter
 
 object CategoryMovieListScreen {
     const val CategoryIdBundleKey = "categoryId"
@@ -86,6 +89,12 @@ private fun CategoryDetails(
     onMovieSelected: (Movie) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    ObserveHopprScreen(Bundle().apply {
+        putString(HopprParameter.SCREEN_NAME, "categoryDetails")
+        putString("categoryName", categoryDetails.name)
+        putInt("movieCount", categoryDetails.movies.size)
+    })
+
     val childPadding = rememberChildPadding()
     val isFirstItemVisible = remember { mutableStateOf(false) }
 

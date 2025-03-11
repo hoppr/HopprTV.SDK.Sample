@@ -44,6 +44,7 @@ import com.google.jetstream.presentation.common.Error
 import com.google.jetstream.presentation.common.Loading
 import com.google.jetstream.presentation.common.MoviesRow
 import com.google.jetstream.presentation.screens.dashboard.rememberChildPadding
+import com.google.jetstream.presentation.screens.movies.MoviesScreenMovieList
 import com.hoppr.hopprtvandroid.core.model.HopprParameter
 
 @Composable
@@ -117,21 +118,28 @@ private fun Catalog(
         // Setting overscan margin to bottom to ensure the last row's visibility
         modifier = modifier,
     ) {
-
-        item(contentType = "FeaturedMoviesCarousel") {
-            FeaturedMoviesCarousel(
-                movies = featuredMovies,
-                padding = childPadding,
-                goToVideoPlayer = goToVideoPlayer,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(324.dp)
-                /*
-                 Setting height for the FeaturedMovieCarousel to keep it rendered with same height,
-                 regardless of the top bar's visibility
-                 */
+        item {
+            MoviesScreenMovieList(
+                movieList = featuredMovies,
+                onMovieClick = onMovieClick
             )
         }
+
+//        item(contentType = "FeaturedMoviesCarousel") {
+//            FeaturedMoviesCarousel(
+//                movies = featuredMovies,
+//                padding = childPadding,
+//                goToVideoPlayer = goToVideoPlayer,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(324.dp)
+//                /*
+//                 Setting height for the FeaturedMovieCarousel to keep it rendered with same height,
+//                 regardless of the top bar's visibility
+//                 */
+//            )
+//        }
+
         item(contentType = "MoviesRow") {
             MoviesRow(
                 modifier = Modifier.padding(top = 16.dp),
