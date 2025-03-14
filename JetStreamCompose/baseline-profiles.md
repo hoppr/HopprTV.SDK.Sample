@@ -23,7 +23,7 @@ To apply the baseline profile when running the app from Android Studio, follow t
 **Step-1**: Install and launch the app manually or follow this command:
 
 ```
-adb shell am start -n com.google.jetstream/com.google.jetstream.MainActivity
+adb shell am start -n com.hoppr.jetstream/com.hoppr.jetstream.MainActivity
 ```
 
 > Note: When testing for performance, it is always best to install the release build of the app.
@@ -32,14 +32,14 @@ adb shell am start -n com.google.jetstream/com.google.jetstream.MainActivity
 **Step-2**: Compile the app with baseline profile using the following command: 
 
 ```
-adb shell cmd package compile -f -m speed-profile com.google.jetstream
+adb shell cmd package compile -f -m speed-profile com.hoppr.jetstream
 ```
 
 
 **Step-3**: Determine the status of profile by running the following:
 
 ```
-adb shell dumpsys package dexopt | grep -A 1 com.google.jetstream
+adb shell dumpsys package dexopt | grep -A 1 com.hoppr.jetstream
 ```
 
 If the status is `status=speed-profile`, it means that baseline profile rules have been applied to optimize the app. Therefore, you can skip directly to **Step-5**.
@@ -60,10 +60,10 @@ It executes a background task that typically takes about ~40 seconds to complete
 
 ```
 // Force close the app
-adb shell am force-stop com.google.jetstream
+adb shell am force-stop com.hoppr.jetstream
 
 // Launch the app
-adb shell am start -n com.google.jetstream/com.google.jetstream.MainActivity
+adb shell am start -n com.hoppr.jetstream/com.hoppr.jetstream.MainActivity
 ```
 
 Now, you can observe the improvement in the app's startup and overall performance as perceived by the end user.

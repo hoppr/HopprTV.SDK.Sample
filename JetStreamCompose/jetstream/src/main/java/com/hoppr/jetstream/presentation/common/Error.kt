@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Google LLC
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-    }
+package com.hoppr.jetstream.presentation.common
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.tv.material3.Text
+import com.hoppr.jetstream.R
+
+@Composable
+fun Error(modifier: Modifier = Modifier) {
+    Text(
+        text = stringResource(id = R.string.message_error),
+        modifier = modifier
+    )
 }
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url = uri("https://us-central1-maven.pkg.dev/hoppr-androidtv-dev/android-sdk/")
-        }
-    }
-}
-rootProject.name = "JetStream"
-include(":jetstream")

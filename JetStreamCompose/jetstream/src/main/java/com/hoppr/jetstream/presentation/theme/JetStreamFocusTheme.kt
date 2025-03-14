@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-    }
-}
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url = uri("https://us-central1-maven.pkg.dev/hoppr-androidtv-dev/android-sdk/")
-        }
-    }
-}
-rootProject.name = "JetStream"
-include(":jetstream")
+package com.hoppr.jetstream.presentation.theme
+
+import androidx.compose.ui.unit.dp
+import androidx.tv.material3.ShapeDefaults
+
+val JetStreamCardShape = ShapeDefaults.ExtraSmall
+val JetStreamButtonShape = ShapeDefaults.ExtraSmall
+val IconSize = 20.dp
+val JetStreamBorderWidth = 3.dp
+
+/**
+ * Space to be given below every Lazy (or scrollable) vertical list throughout the app
+ */
+val JetStreamBottomListPadding = 28.dp

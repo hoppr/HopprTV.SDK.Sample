@@ -8,3 +8,5 @@
 /.idea/
 local.properties
 .kotlin
+/keystore
+/jetstream/release/

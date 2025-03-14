@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-    }
-}
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url = uri("https://us-central1-maven.pkg.dev/hoppr-androidtv-dev/android-sdk/")
+package com.hoppr.jetstream.data.repositories
+
+import com.hoppr.jetstream.data.entities.toMovieCast
+import com.hoppr.jetstream.data.util.AssetsReader
+import com.hoppr.jetstream.data.util.StringConstants
+import javax.inject.Inject
+
+class MovieCastDataSource @Inject constructor(
+    assetsReader: AssetsReader
+) {
+
+    private val movieCastDataReader = CachedDataReader {
+        readMovieCastData(assetsReader, StringConstants.Assets.MovieCast).map {
+            it.toMovieCast()
         }
     }
+
+    suspend fun getMovieCastList() = movieCastDataReader.read()
 }
-rootProject.name = "JetStream"
-include(":jetstream")

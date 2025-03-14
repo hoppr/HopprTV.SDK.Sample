@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-    }
-}
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url = uri("https://us-central1-maven.pkg.dev/hoppr-androidtv-dev/android-sdk/")
-        }
-    }
-}
-rootProject.name = "JetStream"
-include(":jetstream")
+package com.hoppr.jetstream.data.entities
+
+import com.hoppr.jetstream.data.models.MovieCategoriesResponseItem
+
+data class MovieCategory(
+    val id: String,
+    val name: String,
+)
+
+fun MovieCategoriesResponseItem.toMovieCategory(): MovieCategory =
+    MovieCategory(id, name)

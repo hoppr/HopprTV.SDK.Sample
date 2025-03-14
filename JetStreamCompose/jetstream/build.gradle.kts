@@ -30,18 +30,18 @@ kotlin {
 }
 
 android {
-    namespace = "com.google.jetstream"
+    namespace = "com.hoppr.jetstream"
     // Needed for latest androidx snapshot build
     compileSdk = 35
 
 
 
     defaultConfig {
-        applicationId = "com.google.jetstream"
+        applicationId = "com.hoppr.jetstream"
         minSdk = 28
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

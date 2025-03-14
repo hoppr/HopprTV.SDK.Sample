@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-    }
-}
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url = uri("https://us-central1-maven.pkg.dev/hoppr-androidtv-dev/android-sdk/")
-        }
-    }
-}
-rootProject.name = "JetStream"
-include(":jetstream")
+package com.hoppr.jetstream.presentation.utils
+
+import androidx.compose.runtime.Immutable
+import androidx.compose.ui.unit.Dp
+
+@Immutable
+data class Padding(
+    val start: Dp,
+    val top: Dp,
+    val end: Dp,
+    val bottom: Dp,
+)
