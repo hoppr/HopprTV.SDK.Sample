@@ -20,12 +20,12 @@ steps:
     displayName: "Build ${{ parameters.publishName }}"
     inputs:
       workingDirectory: ${{ parameters.workingDirectory }}
-      gradleWrapperFile: '${{ parameters.workingDirectory }}/gradlew'
+      gradleWrapperFile: "${{ parameters.workingDirectory }}/gradlew"
       # gradleOptions: '-Xmx3072m'
       publishJUnitResults: false
       # testResultsFiles: '**/TEST-*.xml'
       tasks: ${{ parameters.gradleTask }}
-      options: '-PappKey=${{ parameters.appKey }})'
+      options: "-PappKey=${{ parameters.appKey }}"
 
   - task: CopyFiles@2
     displayName: "Copy HopprTV APK to release"
@@ -40,15 +40,15 @@ steps:
   #     targetFolder: "$(Build.ArtifactStagingDirectory)/release/${{ parameters.publishName }}/scripts"
 
   - task: ArchiveFiles@2
-    displayName: 'Package Release Folder To Zip'
+    displayName: "Package Release Folder To Zip"
     inputs:
-      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/release-${{ parameters.versionName }}/${{ parameters.publishName }}'
+      rootFolderOrFile: "$(Build.ArtifactStagingDirectory)/release-${{ parameters.versionName }}/${{ parameters.publishName }}"
       includeRootFolder: false
-      archiveType: 'zip'
+      archiveType: "zip"
       archiveFile: "$(Build.ArtifactStagingDirectory)/${{ parameters.publishName }}.zip"
       replaceExistingArchive: true
       verbose: true
 
-  - publish: '$(Build.ArtifactStagingDirectory)/${{ parameters.publishName }}.zip'
-    displayName: 'Publish ${{ parameters.publishName }}'
-    artifact: '${{ parameters.publishName }}'
+  - publish: "$(Build.ArtifactStagingDirectory)/${{ parameters.publishName }}.zip"
+    displayName: "Publish ${{ parameters.publishName }}"
+    artifact: "${{ parameters.publishName }}"
