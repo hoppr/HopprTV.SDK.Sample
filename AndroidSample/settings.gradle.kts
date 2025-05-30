@@ -17,7 +17,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven {
-            url = uri("https://us-central1-maven.pkg.dev/hoppr-androidtv-dev/android-sdk")
+            url = uri("https://us-central1-maven.pkg.dev/hoppr-androidtv-dev/maven-repo")
         }
     }
 }
