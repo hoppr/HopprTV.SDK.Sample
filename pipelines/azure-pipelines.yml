@@ -1,5 +1,5 @@
 # ON MASTER COMMIT:
-# 1. BUILDS ALL VERSIONS OF PROD THAT WE CARE ABOUT
+# 1. BUILDS SELECTED VERSIONS OF PROD
 # 2. PUBLISHES THOSE BUILDS TO GITHUB
 # 3. GENERATES RELEASE NOTES
 # 4. TAGS RELEASE IN GITHUB
@@ -7,25 +7,33 @@
 
 pr: none
 trigger: none
-
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 parameters:
   - name: versionName
-    displayName: 'Version Number'
+    displayName: "Version Number"
     type: string
     default: "4.0"
+  - name: releaseType
+    displayName: "Release Type"
+    type: string
+    default: "Both"
+    values:
+      - "ReactNative"
+      - "JetStream"
+      - "Both"
   - name: reactNativeAppKey
-    displayName: 'RN App Key'
+    displayName: "RN App Key"
     type: string
     default: ""
   - name: jetStreamAppKey
-    displayName: 'JetStream App Key'
+    displayName: "JetStream App Key"
     type: string
     default: ""
 
-name: "RELEASE RN-Android v${{ parameters.versionName }}"
+name: "RELEASE v${{ parameters.versionName }}"
+
 stages:
   - stage: Build
     jobs:
@@ -34,49 +42,47 @@ stages:
           - checkout: self
             persistCredentials: true
 
-          # - template: ./templates/setVersion.yml
-          #   parameters:
-          #     versionName: '${{ parameters.versionName }}'
-
           - task: JavaToolInstaller@0
             inputs:
-              versionSpec: '17'
-              jdkArchitectureOption: 'x64'
-              jdkSourceOption: 'PreInstalled'
+              versionSpec: "17"
+              jdkArchitectureOption: "x64"
+              jdkSourceOption: "PreInstalled"
 
-          # Clean old dependencies and install fresh ones
-          - script: |
-              npm config list
-              rm -rf node_modules android/.gradle android/app/build
-              rm package-lock.json
-              echo "HOPPR_APP_KEY=${{ parameters.reactNativeAppKey }}" > .env
-              npm cache clean --force
-              npm install --frozen-lockfile
-            displayName: 'Clean and Install Dependencies'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/ReactNativeSample'
+          # React Native Build (conditional)
+          - ${{ if or(eq(parameters.releaseType, 'ReactNative'), eq(parameters.releaseType, 'Both')) }}:
+              - script: |
+                  npm config list
+                  rm -rf node_modules android/.gradle android/app/build
+                  rm package-lock.json
+                  echo "HOPPR_APP_KEY=${{ parameters.reactNativeAppKey }}" > .env
+                  npm cache clean --force
+                  npm install --frozen-lockfile
+                displayName: "Clean and Install RN Dependencies"
+                workingDirectory: "$(System.DefaultWorkingDirectory)/ReactNativeSample"
 
-          - template: ./templates/bundleBuild.yml
-            parameters:
-              workingDirectory: '$(System.DefaultWorkingDirectory)/JetStreamCompose'
-              gradleTask: 'assembleRelease'
-              publishPath: '$(System.DefaultWorkingDirectory)/JetStreamCompose/jetstream/build/outputs/apk'
-              publishName: "Hoppr-JetStream-Android ${{ parameters.versionName }}"
-              versionName: "${{ parameters.versionName }}"
-              appKey: "${{ parameters.jetStreamAppKey }}"
+              - template: ./templates/bundleBuild.yml
+                parameters:
+                  workingDirectory: "$(System.DefaultWorkingDirectory)/ReactNativeSample/android"
+                  gradleTask: "assembleRelease"
+                  publishPath: "$(System.DefaultWorkingDirectory)/ReactNativeSample/android/app/build/outputs/apk"
+                  publishName: "Hoppr-RN-Android ${{ parameters.versionName }}"
+                  versionName: "${{ parameters.versionName }}"
 
-          - template: ./templates/bundleBuild.yml
-            parameters:
-              workingDirectory: '$(System.DefaultWorkingDirectory)/ReactNativeSample/android'
-              gradleTask: 'assembleRelease'
-              publishPath: '$(System.DefaultWorkingDirectory)/ReactNativeSample/android/app/build/outputs/apk'
-              publishName: "Hoppr-RN-Android ${{ parameters.versionName }}"
-              versionName: "${{ parameters.versionName }}"
+          # JetStream Build (conditional)
+          - ${{ if or(eq(parameters.releaseType, 'JetStream'), eq(parameters.releaseType, 'Both')) }}:
+              - template: ./templates/bundleBuild.yml
+                parameters:
+                  workingDirectory: "$(System.DefaultWorkingDirectory)/JetStreamCompose"
+                  gradleTask: "assembleRelease"
+                  publishPath: "$(System.DefaultWorkingDirectory)/JetStreamCompose/jetstream/build/outputs/apk"
+                  publishName: "Hoppr-JetStream-Android ${{ parameters.versionName }}"
+                  versionName: "${{ parameters.versionName }}"
+                  appKey: "${{ parameters.jetStreamAppKey }}"
 
           - script: |
               versionName="${{ parameters.versionName }}"
-              
               git config --global user.email "@azure@pipelines.com"
-              git config --global user.name "Release Pipeline"  
+              git config --global user.name "Release Pipeline"
               git tag v$versionName
               git push origin tag v$versionName
-            displayName: 'Tag Release Commit'
+            displayName: "Tag Release Commit"
