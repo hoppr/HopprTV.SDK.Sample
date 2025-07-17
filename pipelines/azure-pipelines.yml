@@ -37,7 +37,8 @@ name: "RELEASE v${{ parameters.versionName }}"
 stages:
   - stage: Build
     jobs:
-      - job: Build_RELEASE
+      - job: Build_ReactNative
+        condition: ${{ or(eq(parameters.releaseType, 'ReactNative'), eq(parameters.releaseType, 'Both')) }}
         steps:
           - checkout: self
             persistCredentials: true
@@ -48,41 +49,41 @@ stages:
               jdkArchitectureOption: "x64"
               jdkSourceOption: "PreInstalled"
 
-          # React Native Build (conditional)
-          - ${{ if or(eq(parameters.releaseType, 'ReactNative'), eq(parameters.releaseType, 'Both')) }}:
-              - script: |
-                  npm config list
-                  rm -rf node_modules android/.gradle android/app/build
-                  rm package-lock.json
-                  echo "HOPPR_APP_KEY=${{ parameters.reactNativeAppKey }}" > .env
-                  npm cache clean --force
-                  npm install --frozen-lockfile
-                displayName: "Clean and Install RN Dependencies"
-                workingDirectory: "$(System.DefaultWorkingDirectory)/ReactNativeSample"
-
-              - template: ./templates/bundleBuild.yml
-                parameters:
-                  workingDirectory: "$(System.DefaultWorkingDirectory)/ReactNativeSample/android"
-                  gradleTask: "assembleRelease"
-                  publishPath: "$(System.DefaultWorkingDirectory)/ReactNativeSample/android/app/build/outputs/apk"
-                  publishName: "Hoppr-RN-Android ${{ parameters.versionName }}"
-                  versionName: "${{ parameters.versionName }}"
-
-          # JetStream Build (conditional)
-          - ${{ if or(eq(parameters.releaseType, 'JetStream'), eq(parameters.releaseType, 'Both')) }}:
-              - template: ./templates/bundleBuild.yml
-                parameters:
-                  workingDirectory: "$(System.DefaultWorkingDirectory)/JetStreamCompose"
-                  gradleTask: "assembleRelease"
-                  publishPath: "$(System.DefaultWorkingDirectory)/JetStreamCompose/jetstream/build/outputs/apk"
-                  publishName: "Hoppr-JetStream-Android ${{ parameters.versionName }}"
-                  versionName: "${{ parameters.versionName }}"
-                  appKey: "${{ parameters.jetStreamAppKey }}"
-
           - script: |
-              versionName="${{ parameters.versionName }}"
-              git config --global user.email "@azure@pipelines.com"
-              git config --global user.name "Release Pipeline"
-              git tag v$versionName
-              git push origin tag v$versionName
-            displayName: "Tag Release Commit"
+              npm config list
+              rm -rf node_modules android/.gradle android/app/build
+              rm package-lock.json
+              echo "HOPPR_APP_KEY=${{ parameters.reactNativeAppKey }}" > .env
+              npm cache clean --force
+              npm install --frozen-lockfile
+            displayName: "Clean and Install RN Dependencies"
+            workingDirectory: "$(System.DefaultWorkingDirectory)/ReactNativeSample"
+
+          - template: ./templates/bundleBuild.yml
+            parameters:
+              workingDirectory: "$(System.DefaultWorkingDirectory)/ReactNativeSample/android"
+              gradleTask: "assembleRelease"
+              publishPath: "$(System.DefaultWorkingDirectory)/ReactNativeSample/android/app/build/outputs/apk"
+              publishName: "Hoppr-ReactNative-v${{ parameters.versionName }}"
+              versionName: "${{ parameters.versionName }}"
+
+      - job: Build_JetStream
+        condition: ${{ or(eq(parameters.releaseType, 'JetStream'), eq(parameters.releaseType, 'Both')) }}
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - task: JavaToolInstaller@0
+            inputs:
+              versionSpec: "17"
+              jdkArchitectureOption: "x64"
+              jdkSourceOption: "PreInstalled"
+
+          - template: ./templates/bundleBuild.yml
+            parameters:
+              workingDirectory: "$(System.DefaultWorkingDirectory)/JetStreamCompose"
+              gradleTask: "assembleRelease"
+              publishPath: "$(System.DefaultWorkingDirectory)/JetStreamCompose/jetstream/build/outputs/apk"
+              publishName: "Hoppr-JetStream-v${{ parameters.versionName }}"
+              versionName: "${{ parameters.versionName }}"
+              appKey: "${{ parameters.jetStreamAppKey }}"
