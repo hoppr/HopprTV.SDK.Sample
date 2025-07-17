@@ -27,28 +27,32 @@ steps:
       tasks: ${{ parameters.gradleTask }}
       options: "-PappKey=${{ parameters.appKey }}"
 
+  - script: |
+      # Find the APK file and rename it
+      apkFile=$(find "${{ parameters.publishPath }}" -name "*.apk" -type f | head -1)
+      if [ -n "$apkFile" ]; then
+        newName="${{ parameters.publishName }}.apk"
+        mv "$apkFile" "$(dirname "$apkFile")/$newName"
+        echo "Renamed APK to: $newName"
+      else
+        echo "No APK file found in ${{ parameters.publishPath }}"
+        exit 1
+      fi
+    displayName: "Rename APK file"
+
   - task: CopyFiles@2
     displayName: "Copy HopprTV APK to release"
     inputs:
       sourceFolder: "${{ parameters.publishPath }}"
       targetFolder: "$(Build.ArtifactStagingDirectory)/release-${{ parameters.versionName }}/${{ parameters.publishName }}"
 
-  # - task: CopyFiles@2
-  #   displayName: "Copy Release Scripts to release"
-  #   inputs:
-  #     sourceFolder: 'release'
-  #     targetFolder: "$(Build.ArtifactStagingDirectory)/release/${{ parameters.publishName }}/scripts"
-
-  - task: ArchiveFiles@2
-    displayName: "Package Release Folder To Zip"
+  - task: UniversalPackages@0
+    displayName: "Publish ${{ parameters.publishName }} to Azure Artifacts"
     inputs:
-      rootFolderOrFile: "$(Build.ArtifactStagingDirectory)/release-${{ parameters.versionName }}/${{ parameters.publishName }}"
-      includeRootFolder: false
-      archiveType: "zip"
-      archiveFile: "$(Build.ArtifactStagingDirectory)/${{ parameters.publishName }}.zip"
-      replaceExistingArchive: true
-      verbose: true
-
-  - publish: "$(Build.ArtifactStagingDirectory)/${{ parameters.publishName }}.zip"
-    displayName: "Publish ${{ parameters.publishName }}"
-    artifact: "${{ parameters.publishName }}"
+      command: 'publish'
+      publishDirectory: "$(Build.ArtifactStagingDirectory)/release-${{ parameters.versionName }}/${{ parameters.publishName }}"
+      feedsToUsePublish: 'internal'
+      vstsFeedPublish: 'HopprTV-Releases'
+      vstsFeedPackagePublish: '${{ parameters.publishName }}'
+      versionOption: 'custom'
+      versionPublish: '${{ parameters.versionName }}'
