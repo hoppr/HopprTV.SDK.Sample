@@ -46,13 +46,9 @@ steps:
       sourceFolder: "${{ parameters.publishPath }}"
       targetFolder: "$(Build.ArtifactStagingDirectory)/release-${{ parameters.versionName }}/${{ parameters.publishName }}"
 
-  - task: UniversalPackages@0
-    displayName: "Publish ${{ parameters.publishName }} to Azure Artifacts"
+  - task: PublishPipelineArtifact@1
+    displayName: "Publish ${{ parameters.publishName }}"
     inputs:
-      command: 'publish'
-      publishDirectory: "$(Build.ArtifactStagingDirectory)/release-${{ parameters.versionName }}/${{ parameters.publishName }}"
-      feedsToUsePublish: 'internal'
-      vstsFeedPublish: 'HopprTV-Releases'
-      vstsFeedPackagePublish: '${{ parameters.publishName }}'
-      versionOption: 'custom'
-      versionPublish: '${{ parameters.versionName }}'
+      targetPath: "$(Build.ArtifactStagingDirectory)/release-${{ parameters.versionName }}/${{ parameters.publishName }}"
+      artifactName: "${{ parameters.publishName }}"
+      publishLocation: 'pipeline'
