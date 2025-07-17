@@ -87,20 +87,3 @@ stages:
               publishName: "Hoppr-JetStream-v${{ parameters.versionName }}"
               versionName: "${{ parameters.versionName }}"
               appKey: "${{ parameters.jetStreamAppKey }}"
-
-      - job: Tag_Release
-        dependsOn: 
-          - Build_ReactNative
-          - Build_JetStream
-        condition: succeededOrSkipped()
-        steps:
-          - checkout: self
-            persistCredentials: true
-
-          - script: |
-              versionName="${{ parameters.versionName }}"
-              git config --global user.email "@azure@pipelines.com"
-              git config --global user.name "Release Pipeline"
-              git tag v$versionName
-              git push origin tag v$versionName
-            displayName: "Tag Release Commit"
