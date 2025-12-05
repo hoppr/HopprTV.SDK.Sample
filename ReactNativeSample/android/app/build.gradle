@@ -77,7 +77,7 @@ project.ext.envConfigFiles = [
         release: ".env",
 ]
 
-apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+apply from: "../../node_modules/react-native-config/dotenv.gradle"
 
 android {
     ndkVersion rootProject.ext.ndkVersion
