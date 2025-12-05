@@ -51,11 +51,10 @@ stages:
 
           - script: |
               npm config list
-              rm -rf node_modules android/.gradle android/app/build
-              rm package-lock.json
+              rm -rf android/.gradle android/app/build
               echo "HOPPR_APP_KEY=${{ parameters.reactNativeAppKey }}" > .env
               npm cache clean --force
-              npm install --frozen-lockfile
+              npm ci
             displayName: "Clean and Install RN Dependencies"
             workingDirectory: "$(System.DefaultWorkingDirectory)/ReactNativeSample"
 
