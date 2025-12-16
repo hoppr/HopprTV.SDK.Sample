@@ -15,7 +15,7 @@
     "react": "18.3.1",
     "react-native": "npm:react-native-tvos@0.76.0-0",
     "react-native-config": "^1.5.5",
-    "@hoppr/react-native-hoppr": "1.2.0",
+    "@hoppr/react-native-hoppr": "1.0.62",
     "react-native-safe-area-context": "^5.1.0",
     "react-native-screens": "^4.4.0",
     "react-native-video": "^6.9.0"
