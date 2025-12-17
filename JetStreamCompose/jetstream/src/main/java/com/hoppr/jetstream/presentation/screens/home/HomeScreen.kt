@@ -40,6 +40,7 @@ import com.hoppr.jetstream.ObserveHopprScreen
 import com.hoppr.jetstream.data.entities.Movie
 import com.hoppr.jetstream.data.entities.MovieList
 import com.hoppr.jetstream.data.util.StringConstants
+import com.hoppr.jetstream.presentation.common.BannerAdView
 import com.hoppr.jetstream.presentation.common.Error
 import com.hoppr.jetstream.presentation.common.Loading
 import com.hoppr.jetstream.presentation.common.MoviesRow
@@ -146,6 +147,12 @@ private fun Catalog(
                 movieList = trendingMovies,
                 title = StringConstants.Composable.HomeScreenTrendingTitle,
                 onMovieSelected = onMovieClick
+            )
+        }
+        item(contentType = "BannerAd") {
+            BannerAdView(
+                adUnit = "Banner",
+                modifier = Modifier.padding(top = 16.dp)
             )
         }
         item(contentType = "Top10MoviesList") {

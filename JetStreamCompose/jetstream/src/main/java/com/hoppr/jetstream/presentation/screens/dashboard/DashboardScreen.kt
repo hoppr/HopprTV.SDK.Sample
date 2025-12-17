@@ -66,6 +66,7 @@ import com.hoppr.jetstream.presentation.screens.movies.MoviesScreen
 import com.hoppr.jetstream.presentation.screens.profile.ProfileScreen
 import com.hoppr.jetstream.presentation.screens.search.SearchScreen
 import com.hoppr.jetstream.presentation.screens.shows.ShowsScreen
+import com.hoppr.jetstream.presentation.screens.video.VideoScreen
 import com.hoppr.jetstream.presentation.utils.Padding
 import com.hoppr.hopprtvandroid.Hoppr
 
@@ -274,6 +275,12 @@ private fun Body(
         composable(Screens.Favourites()) {
             FavouritesScreen(
                 onMovieClick = openMovieDetailsScreen,
+                onScroll = updateTopBarVisibility,
+                isTopBarVisible = isTopBarVisible
+            )
+        }
+        composable(Screens.Video()) {
+            VideoScreen(
                 onScroll = updateTopBarVisibility,
                 isTopBarVisible = isTopBarVisible
             )
