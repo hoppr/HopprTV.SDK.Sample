@@ -17,13 +17,14 @@
 package com.hoppr.jetstream.presentation.screens.home
 
 import android.os.Bundle
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -95,14 +96,13 @@ private fun Catalog(
         putInt("featuredMoviesCount", featuredMovies.size)
     })
 
-    val lazyListState = rememberLazyListState()
+    val scrollState = rememberScrollState()
     val childPadding = rememberChildPadding()
     var immersiveListHasFocus by remember { mutableStateOf(false) }
 
     val shouldShowTopBar by remember {
         derivedStateOf {
-            lazyListState.firstVisibleItemIndex == 0 &&
-                lazyListState.firstVisibleItemScrollOffset < 300
+            scrollState.value < 300
         }
     }
 
@@ -110,67 +110,57 @@ private fun Catalog(
         onScroll(shouldShowTopBar)
     }
     LaunchedEffect(isTopBarVisible) {
-        if (isTopBarVisible) lazyListState.animateScrollToItem(0)
+        if (isTopBarVisible) scrollState.animateScrollTo(0)
     }
 
-    LazyColumn(
-        state = lazyListState,
-        contentPadding = PaddingValues(bottom = 108.dp),
-        // Setting overscan margin to bottom to ensure the last row's visibility
-        modifier = modifier,
+    Column(
+        modifier = modifier
+            .verticalScroll(scrollState)
+            .padding(bottom = 108.dp),
     ) {
-        item {
-            MoviesScreenMovieList(
-                movieList = featuredMovies,
-                onMovieClick = onMovieClick
-            )
-        }
+        MoviesScreenMovieList(
+            movieList = featuredMovies,
+            onMovieClick = onMovieClick
+        )
 
-//        item(contentType = "FeaturedMoviesCarousel") {
-//            FeaturedMoviesCarousel(
-//                movies = featuredMovies,
-//                padding = childPadding,
-//                goToVideoPlayer = goToVideoPlayer,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(324.dp)
-//                /*
-//                 Setting height for the FeaturedMovieCarousel to keep it rendered with same height,
-//                 regardless of the top bar's visibility
-//                 */
-//            )
-//        }
+//        FeaturedMoviesCarousel(
+//            movies = featuredMovies,
+//            padding = childPadding,
+//            goToVideoPlayer = goToVideoPlayer,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(324.dp)
+//            /*
+//             Setting height for the FeaturedMovieCarousel to keep it rendered with same height,
+//             regardless of the top bar's visibility
+//             */
+//        )
 
-        item(contentType = "MoviesRow") {
-            MoviesRow(
-                modifier = Modifier.padding(top = 16.dp),
-                movieList = trendingMovies,
-                title = StringConstants.Composable.HomeScreenTrendingTitle,
-                onMovieSelected = onMovieClick
-            )
-        }
-        item(contentType = "BannerAd") {
-            BannerAdView(
-                adUnit = "Banner",
-                modifier = Modifier.padding(top = 16.dp)
-            )
-        }
-        item(contentType = "Top10MoviesList") {
-            Top10MoviesList(
-                movieList = top10Movies,
-                onMovieClick = onMovieClick,
-                modifier = Modifier.onFocusChanged {
-                    immersiveListHasFocus = it.hasFocus
-                },
-            )
-        }
-        item(contentType = "MoviesRow") {
-            MoviesRow(
-                modifier = Modifier.padding(top = 16.dp),
-                movieList = nowPlayingMovies,
-                title = StringConstants.Composable.HomeScreenNowPlayingMoviesTitle,
-                onMovieSelected = onMovieClick
-            )
-        }
+        MoviesRow(
+            modifier = Modifier.padding(top = 16.dp),
+            movieList = trendingMovies,
+            title = StringConstants.Composable.HomeScreenTrendingTitle,
+            onMovieSelected = onMovieClick
+        )
+
+        BannerAdView(
+            adUnit = "Banner",
+            modifier = Modifier.padding(top = 16.dp)
+        )
+
+        Top10MoviesList(
+            movieList = top10Movies,
+            onMovieClick = onMovieClick,
+            modifier = Modifier.onFocusChanged {
+                immersiveListHasFocus = it.hasFocus
+            },
+        )
+
+        MoviesRow(
+            modifier = Modifier.padding(top = 16.dp),
+            movieList = nowPlayingMovies,
+            title = StringConstants.Composable.HomeScreenNowPlayingMoviesTitle,
+            onMovieSelected = onMovieClick
+        )
     }
 }
