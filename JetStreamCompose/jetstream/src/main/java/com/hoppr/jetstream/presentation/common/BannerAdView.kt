@@ -20,8 +20,6 @@ import android.util.Log
 import android.webkit.WebView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -31,7 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.viewinterop.AndroidView
 import com.hoppr.hopprtvandroid.Hoppr
 import com.hoppr.hopprtvandroid.external.banner.BannerAdResult
@@ -80,7 +78,10 @@ fun BannerAdView(
         Box(
             modifier = modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
-        ) {
+        ) {val density = LocalDensity.current
+
+            val bannerWidthDp = with(density) { banner.width.toDp() }
+            val bannerHeightDp = with(density) { banner.height.toDp() }
             AndroidView(
                 factory = { ctx ->
                     WebView(ctx).apply {
@@ -99,8 +100,8 @@ fun BannerAdView(
                     }
                 },
                 modifier = Modifier
-                    .width(banner.width.dp)
-                    .height(banner.height.dp)
+//                    .width(bannerWidthDp)
+//                    .height(bannerHeightDp)
                     .focusProperties { canFocus = false }
             )
         }

@@ -143,17 +143,17 @@ private fun Catalog(
             onMovieSelected = onMovieClick
         )
 
-        BannerAdView(
-            adUnit = "Banner",
-            modifier = Modifier.padding(top = 16.dp)
-        )
-
         Top10MoviesList(
             movieList = top10Movies,
             onMovieClick = onMovieClick,
             modifier = Modifier.onFocusChanged {
                 immersiveListHasFocus = it.hasFocus
             },
+        )
+
+        BannerAdView(
+            adUnit = "Banner",
+            modifier = Modifier.padding(top = 16.dp)
         )
 
         MoviesRow(
