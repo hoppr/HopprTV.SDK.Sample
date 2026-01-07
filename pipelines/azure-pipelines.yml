@@ -25,8 +25,8 @@ parameters:
     values:
       - "ReactNative"
       - "JetStream"
-      - "Web"
       - "RN+JetStream"
+      - "Web"
       - "All"
   - name: reactNativeAppKey
     displayName: "RN App Key"
