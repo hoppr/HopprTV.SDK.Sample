@@ -50,11 +50,16 @@ stages:
               jdkSourceOption: "PreInstalled"
 
           - script: |
+              sed -i 's/"@hoppr\/react-native-hoppr": "[^"]*"/"@hoppr\/react-native-hoppr": "${{ parameters.versionName }}"/g' package.json
+            displayName: "Update Hoppr version in package.json"
+            workingDirectory: "$(System.DefaultWorkingDirectory)/ReactNativeSample"
+
+          - script: |
               npm config list
               rm -rf android/.gradle android/app/build
               echo "HOPPR_APP_KEY=${{ parameters.reactNativeAppKey }}" > .env
               npm cache clean --force
-              npm ci
+              npm install
             displayName: "Clean and Install RN Dependencies"
             workingDirectory: "$(System.DefaultWorkingDirectory)/ReactNativeSample"
 
@@ -77,6 +82,11 @@ stages:
               versionSpec: "17"
               jdkArchitectureOption: "x64"
               jdkSourceOption: "PreInstalled"
+
+          - script: |
+              sed -i 's/^hoppr = ".*"/hoppr = "${{ parameters.versionName }}"/' gradle/libs.versions.toml
+            displayName: "Update Hoppr version in libs.versions.toml"
+            workingDirectory: "$(System.DefaultWorkingDirectory)/JetStreamCompose"
 
           - template: ./templates/bundleBuild.yml
             parameters:
