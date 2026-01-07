@@ -137,7 +137,7 @@ stages:
             workingDirectory: "$(System.DefaultWorkingDirectory)/Web"
 
           - script: |
-              echo "HOPPR_SDK_VERSION=${{ parameters.versionName }}" > .env
+              echo "VITE_HOPPR_SDK_VERSION=${{ parameters.versionName }}" > .env
             displayName: "Create .env file with version"
             workingDirectory: "$(System.DefaultWorkingDirectory)/Web"
 
