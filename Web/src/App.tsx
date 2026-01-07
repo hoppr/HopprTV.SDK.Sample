@@ -18,8 +18,6 @@ init({
   visualDebug: false,
 });
 
-const test = "a25LbnCC63vg6tFlpbB9ymn7Z4acYFIbNj_zEJB6SrzfNKpCGzJt6PWc5FqZ_Cp8jsrOeTxzXgk9oo8NFkB2qA";
-
 export function isTizenAvailable(): boolean {
   return typeof (window as any).tizen !== "undefined";
 }
@@ -31,7 +29,7 @@ export function App() {
   useEffect(() => {
     // Auto-use test key on Tizen
     if (isTizenAvailable() && !appKey) {
-      setAppKey(test);
+      setAppKey("");
     }
   }, [appKey]);
 
