@@ -14,7 +14,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@hoppr/hoppr-web-sdk": "XXX",
+    "@hoppr/hoppr-web-sdk": "1.3.0",
     "@noriginmedia/norigin-spatial-navigation": "^2.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

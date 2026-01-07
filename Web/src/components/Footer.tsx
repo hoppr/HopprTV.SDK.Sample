@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <footer className="app-footer">
       <div className="footer-content">
-        <span>Hoppr: {version}</span>
+        <span>Hoppr - {version}</span>
       </div>
     </footer>
   );
