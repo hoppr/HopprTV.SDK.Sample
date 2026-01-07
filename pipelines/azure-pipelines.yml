@@ -26,7 +26,7 @@ parameters:
       - "ReactNative"
       - "JetStream"
       - "Web"
-      - "Both"
+      - "RN+JetStream"
       - "All"
   - name: reactNativeAppKey
     displayName: "RN App Key"
@@ -43,7 +43,7 @@ stages:
   - stage: Build
     jobs:
       - job: Build_ReactNative
-        condition: ${{ or(eq(parameters.releaseType, 'ReactNative'), eq(parameters.releaseType, 'Both'), eq(parameters.releaseType, 'All')) }}
+        condition: ${{ or(eq(parameters.releaseType, 'ReactNative'), eq(parameters.releaseType, 'RN+JetStream'), eq(parameters.releaseType, 'All')) }}
         steps:
           - checkout: self
             persistCredentials: true
@@ -77,7 +77,7 @@ stages:
               versionName: "${{ parameters.versionName }}"
 
       - job: Build_JetStream
-        condition: ${{ or(eq(parameters.releaseType, 'JetStream'), eq(parameters.releaseType, 'Both'), eq(parameters.releaseType, 'All')) }}
+        condition: ${{ or(eq(parameters.releaseType, 'JetStream'), eq(parameters.releaseType, 'RN+JetStream'), eq(parameters.releaseType, 'All')) }}
         steps:
           - checkout: self
             persistCredentials: true
