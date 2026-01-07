@@ -18,11 +18,13 @@ parameters:
   - name: releaseType
     displayName: "Release Type"
     type: string
-    default: "Both"
+    default: "All"
     values:
       - "ReactNative"
       - "JetStream"
+      - "Web"
       - "Both"
+      - "All"
   - name: reactNativeAppKey
     displayName: "RN App Key"
     type: string
@@ -38,7 +40,7 @@ stages:
   - stage: Build
     jobs:
       - job: Build_ReactNative
-        condition: ${{ or(eq(parameters.releaseType, 'ReactNative'), eq(parameters.releaseType, 'Both')) }}
+        condition: ${{ or(eq(parameters.releaseType, 'ReactNative'), eq(parameters.releaseType, 'Both'), eq(parameters.releaseType, 'All')) }}
         steps:
           - checkout: self
             persistCredentials: true
@@ -72,7 +74,7 @@ stages:
               versionName: "${{ parameters.versionName }}"
 
       - job: Build_JetStream
-        condition: ${{ or(eq(parameters.releaseType, 'JetStream'), eq(parameters.releaseType, 'Both')) }}
+        condition: ${{ or(eq(parameters.releaseType, 'JetStream'), eq(parameters.releaseType, 'Both'), eq(parameters.releaseType, 'All')) }}
         steps:
           - checkout: self
             persistCredentials: true
@@ -96,3 +98,80 @@ stages:
               publishName: "Hoppr-JetStream-v${{ parameters.versionName }}"
               versionName: "${{ parameters.versionName }}"
               appKey: "${{ parameters.jetStreamAppKey }}"
+
+      - job: Build_Web
+        condition: ${{ or(eq(parameters.releaseType, 'Web'), eq(parameters.releaseType, 'All')) }}
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - task: NodeTool@0
+            displayName: "Install Node.js"
+            inputs:
+              versionSpec: "23.x"
+
+          - task: DownloadSecureFile@1
+            name: serviceAccountKey
+            displayName: "Download GCP Service Account Key"
+            inputs:
+              secureFile: "$(SERVICE_KEY)"
+
+          - script: |
+              echo "Authenticating with GCP"
+              gcloud auth activate-service-account --key-file=$(serviceAccountKey.secureFilePath)
+              gcloud auth list
+            displayName: "Authenticate with GCP"
+
+          - script: |
+              echo "Configuring npm for Google Artifact Registry"
+              npm config set @hoppr:registry https://us-central1-npm.pkg.dev/hoppr-androidtv-dev/npm-repo/
+              npm config set //us-central1-npm.pkg.dev/hoppr-androidtv-dev/npm-repo/:_authToken=$(gcloud auth print-access-token)
+            displayName: "Configure npm for private registry"
+
+          - script: |
+              sed -i 's/"@hoppr\/hoppr-web-sdk": "[^"]*"/"@hoppr\/hoppr-web-sdk": "${{ parameters.versionName }}"/g' package.json
+            displayName: "Update Hoppr version in package.json"
+            workingDirectory: "$(System.DefaultWorkingDirectory)/Web"
+
+          - script: |
+              echo "HOPPR_SDK_VERSION=${{ parameters.versionName }}" > .env
+            displayName: "Create .env file with version"
+            workingDirectory: "$(System.DefaultWorkingDirectory)/Web"
+
+          - script: |
+              echo "Installing Firebase CLI"
+              npm install -g firebase-tools@latest
+
+              echo "Verifying Firebase CLI installation"
+              firebase --version
+            displayName: "Install Firebase CLI"
+
+          - script: |
+              echo "Installing Web app dependencies"
+              npm install
+
+              echo "Type checking Web application"
+              npx tsc -b
+
+              echo "Building Web application"
+              npm run build:no-typecheck
+
+              echo "Verifying build output"
+              ls -la dist/
+            workingDirectory: "$(System.DefaultWorkingDirectory)/Web"
+            displayName: "Build Web Application"
+
+          - script: |
+              echo "Getting GCP access token for Firebase"
+              FIREBASE_TOKEN=$(gcloud auth print-access-token)
+
+              echo "Setting Firebase project"
+              firebase use hoppr-androidtv-test --token "$FIREBASE_TOKEN"
+
+              echo "Deploying to Firebase Hosting (site: hoppr-sdk-sample)"
+              firebase deploy --only hosting:hoppr-sdk-sample --token "$FIREBASE_TOKEN" --non-interactive
+
+              echo "Deployment completed successfully"
+              echo "Web app deployed to: https://hoppr-sdk-sample.web.app"
+            workingDirectory: "$(System.DefaultWorkingDirectory)/Web"
+            displayName: "Deploy to Firebase Hosting"

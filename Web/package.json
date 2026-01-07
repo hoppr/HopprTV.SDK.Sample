@@ -1,0 +1,36 @@
+{
+  "name": "react-sample-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "rm -rf dist/ && rm -rf node_modules/.cache && rm -rf .rollup.cache && rm -rf node_modules/@hoppr && rm -rf node_modules/.vite && rm -rf node_modules/.cache && rm -f package-lock.json && npm cache clean --force && npm install && cd ../sdk && npm run build && cd ../sample && vite",
+    "build": "tsc -b && vite build && rm -rf ../tizen-app/assets && cp -r dist/* ../tizen-app/",
+    "build:no-typecheck": "vite build",
+    "build:tizen": "cd .. && ./transfer-to-tizen.sh",
+    "dev:tizen": "cd .. && ./transfer-to-tizen.sh && ./deploy-to-tv.sh",
+    "deploy": "cd ../sdk && npm run build && cd ../sample && npm run build && firebase deploy --only hosting:hoppr-sdk-sample",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@hoppr/hoppr-web-sdk": "XXX",
+    "@noriginmedia/norigin-spatial-navigation": "^2.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.5.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.22.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.26.1",
+    "vite": "^6.3.1"
+  }
+}
