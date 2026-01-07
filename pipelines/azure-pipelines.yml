@@ -153,6 +153,12 @@ stages:
               echo "Installing Web app dependencies"
               npm install
 
+              echo "Cleaning up for rollup issue workaround"
+              rm -rf package-lock.json node_modules
+
+              echo "Reinstalling dependencies to fix rollup native module issue"
+              npm install
+
               echo "Type checking Web application"
               npx tsc -b
 
