@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { StyleSheet, View, Text, Button, Alert } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from './HomeScreen';
 import { ScreenOne } from './ScreenOne';
 import { ScreenTwo } from './ScreenTwo';
@@ -12,7 +12,7 @@ import Hoppr from '@hoppr/react-native-hoppr';
 
 export default function App() {
   const [result, setResult] = useState<number | undefined>();
-  
+
   const Stack = createNativeStackNavigator();
 
   useEffect(() => {
@@ -24,7 +24,22 @@ export default function App() {
         country: "US",
         city: "New York",
       },
-    });
+    },
+      (type: string, data: Record<string, any>): any => {
+        if (type === "SHOW_ALERT") {
+          const message = "Alert with data " + JSON.stringify(data);
+          Alert.alert(
+            'Host App Alert',
+            message,
+            [
+              { text: 'Cancel', style: 'cancel' },
+              { text: 'OK', onPress: () => console.log('OK pressed') },
+            ],
+            { cancelable: true }
+          );
+        }
+      }
+    );
   }, []);
 
   return (
@@ -33,7 +48,7 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{title: 'Welcome - React Native'}}
+          options={{ title: 'Welcome - React Native' }}
         />
         <Stack.Screen name="ScreenOne" component={ScreenOne} />
         <Stack.Screen name="ScreenTwo" component={ScreenTwo} />

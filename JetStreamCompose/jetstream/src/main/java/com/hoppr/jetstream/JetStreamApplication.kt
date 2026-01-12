@@ -18,7 +18,9 @@ package com.hoppr.jetstream
 
 import android.app.Application
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import com.hoppr.jetstream.data.repositories.MovieRepository
 import com.hoppr.jetstream.data.repositories.MovieRepositoryImpl
@@ -31,7 +33,7 @@ import dagger.hilt.components.SingletonComponent
 import java.util.UUID
 
 @HiltAndroidApp
-class JetStreamApplication : Application(){
+class JetStreamApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
@@ -48,8 +50,37 @@ class JetStreamApplication : Application(){
                     putString("firstName", "John")
                     putString("lastName", "Smith")
                 })
+            },
+            onHostAction = { type, data ->
+                if (type == "SHOW_ALERT") {
+                    val message = "Alert with data: ${bundleToString(data)}"
+
+                    // Ensure UI thread
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(
+                            this,
+                            message,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                    Bundle().apply {
+                        putString("dataString", "Some String")
+                        putBoolean("dataBool", true)
+                    }
+                } else {
+                    null
+                }
             })
     }
+}
+
+fun bundleToString(bundle: Bundle): String {
+    return bundle.keySet()
+        .joinToString(prefix = "{ ", postfix = " }") { key ->
+            "$key=${bundle.get(key)}"
+        }
+
 }
 
 @InstallIn(SingletonComponent::class)
