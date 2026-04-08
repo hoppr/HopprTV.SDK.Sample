@@ -32,7 +32,7 @@ kotlin {
 android {
     namespace = "com.hoppr.jetstream"
     // Needed for latest androidx snapshot build
-    compileSdk = 35
+    compileSdk = 36
 
 
 
@@ -81,9 +81,6 @@ android {
         }
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 }
 
 dependencies {
