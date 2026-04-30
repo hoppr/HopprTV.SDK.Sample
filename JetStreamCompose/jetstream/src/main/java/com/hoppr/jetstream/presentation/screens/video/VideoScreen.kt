@@ -65,14 +65,14 @@ fun VideoScreen(
 
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
-            when (val result = Hoppr.requestVideoAd("Video")) {
-                is VideoResult.Success -> {
-                    Log.d(TAG, "Video ad loaded successfully!")
-                    Log.d(TAG, "VAST XML length: ${result.content.length} characters")
+            Hoppr.requestVideoAd("Video"){ result ->
+                when(result){
+                    is VideoResult.Success -> {
+                        Log.d(TAG, "Video ad loaded successfully!")
+                        Log.d(TAG, "VAST XML length: ${result.content.length} characters")
 
-                    // Parse VAST XML to extract video URL
-                    val url = parseVastXml(result.content)
-                    withContext(Dispatchers.Main) {
+                        // Parse VAST XML to extract video URL
+                        val url = parseVastXml(result.content)
                         if (url != null) {
                             videoUrl = url
                             Log.d(TAG, "Extracted video URL: $url")
@@ -81,23 +81,24 @@ fun VideoScreen(
                             Log.e(TAG, "Failed to parse video URL from VAST")
                         }
                     }
-                }
-                is VideoResult.Error -> {
-                    Log.e(TAG, "Failed to load video ad: ${result.message}")
-                    withContext(Dispatchers.Main) {
+                    is VideoResult.Error -> {
+                        Log.e(TAG, "Failed to load video ad: ${result.message}")
                         errorMessage = result.message
                     }
                 }
+
             }
 
-            when (val result = Hoppr.requestVideoTag("Video")) {
-                is VideoResult.Success -> {
-                    Log.d(TAG, "Video tag URL retrieved successfully!")
-                    Log.d(TAG, "Tag URL: ${result.content}")
-                    // You can now use result.content to fetch VAST XML yourself or pass to a video player
-                }
-                is VideoResult.Error -> {
-                    Log.e(TAG, "Failed to get video tag: ${result.message}")
+            Hoppr.requestVideoTag("Video") { result ->
+                when(result){
+                    is VideoResult.Success -> {
+                        Log.d(TAG, "Video tag URL retrieved successfully!")
+                        Log.d(TAG, "Tag URL: ${result.content}")
+                        // You can now use result.content to fetch VAST XML yourself or pass to a video player
+                    }
+                    is VideoResult.Error -> {
+                        Log.e(TAG, "Failed to get video tag: ${result.message}")
+                    }
                 }
             }
         }

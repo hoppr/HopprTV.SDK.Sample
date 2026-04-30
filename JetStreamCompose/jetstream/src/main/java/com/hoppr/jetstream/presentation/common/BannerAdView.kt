@@ -51,16 +51,18 @@ fun BannerAdView(
     var bannerAdData by remember { mutableStateOf<BannerAdResult.Success?>(null) }
     var webView by remember { mutableStateOf<WebView?>(null) }
 
-    when (val result = Hoppr.requestBannerAd(adUnit)) {
-        is BannerAdResult.Success -> {
-            val banner = result.bannerAdData
-            Log.d(TAG, "Banner ad loaded successfully!")
-            Log.d(TAG, "Banner dimensions: ${banner.width}x${banner.height}")
-            Log.d(TAG, "Banner content: ${banner.baseUrl} - ${banner.content}")
-            bannerAdData = result
-        }
-        is BannerAdResult.Error -> {
-            Log.e(TAG, "Failed to load banner ad: ${result.message}")
+    Hoppr.requestBannerAd(adUnit) { result ->
+        when(result){
+            is BannerAdResult.Success -> {
+                val banner = result.bannerAdData
+                Log.d(TAG, "Banner ad loaded successfully!")
+                Log.d(TAG, "Banner dimensions: ${banner.width}x${banner.height}")
+                Log.d(TAG, "Banner content: ${banner.baseUrl} - ${banner.content}")
+                bannerAdData = result
+            }
+            is BannerAdResult.Error -> {
+                Log.e(TAG, "Failed to load banner ad: ${result.message}")
+            }
         }
     }
 
