@@ -17,7 +17,8 @@ lifecycle-runtime-ktx = "2.10.0"
 media3 = "1.10.0"
 navigation-compose = "2.9.7"
 profileinstaller = "1.4.1"
-hoppr = "1.3.21"
+hoppr = "1.4.2"
+tv-provider = "1.1.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -40,6 +41,7 @@ hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt-android" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 hoppr-android = { module = "com.hoppr:hoppr-android", version.ref = "hoppr"  }
+androidx-tv-provider = { module = "androidx.tvprovider:tvprovider", version.ref = "tv-provider" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
