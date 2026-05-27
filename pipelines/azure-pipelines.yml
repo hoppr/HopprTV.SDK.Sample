@@ -36,6 +36,10 @@ parameters:
     displayName: "JetStream App Key"
     type: string
     default: ""
+  - name: webCdnAppKey
+    displayName: "Web CDN App Key"
+    type: string
+    default: ""
 
 name: "RELEASE v${{ parameters.versionName }}"
 
@@ -184,3 +188,31 @@ stages:
               echo "Web app deployed to: https://hoppr-sdk-sample.web.app"
             workingDirectory: "$(System.DefaultWorkingDirectory)/Web"
             displayName: "Deploy to Firebase Hosting"
+
+      - job: Build_Web_CDN
+        condition: ${{ or(eq(parameters.releaseType, 'Web'), eq(parameters.releaseType, 'All')) }}
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - script: |
+              sed -i 's/__SDK_VERSION__/${{ parameters.versionName }}/g' index.html
+              sed -i 's/__APP_KEY__/${{ parameters.webCdnAppKey }}/g' index.html
+            displayName: "Inject version and app key"
+            workingDirectory: "$(System.DefaultWorkingDirectory)/Web-CDN"
+
+          - task: ArchiveFiles@2
+            displayName: "Zip Web CDN artifact"
+            inputs:
+              rootFolderOrFile: "$(System.DefaultWorkingDirectory)/Web-CDN"
+              includeRootFolder: false
+              archiveType: "zip"
+              archiveFile: "$(Build.ArtifactStagingDirectory)/Hoppr-Web-CDN-v${{ parameters.versionName }}.zip"
+              replaceExistingArchive: true
+
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Web CDN artifact"
+            inputs:
+              PathtoPublish: "$(Build.ArtifactStagingDirectory)/Hoppr-Web-CDN-v${{ parameters.versionName }}.zip"
+              ArtifactName: "Hoppr-Web-CDN-v${{ parameters.versionName }}"
+              publishLocation: "Container"

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hoppr SDK Test</title>
+</head>
+
+<body>
+  <h1>Hoppr CDN</h1>
+  <button onclick="triggerScreenEnter()">Trigger ON_SCREEN_ENTER</button>
+  <button onclick="triggerScreenExit()">Trigger ON_SCREEN_EXIT</button>
+
+  <script src="https://dev.hoppr.au/sdk/v__SDK_VERSION__/hoppr-sdk.umd.js"></script>
+  <script>
+    const APP_KEY = "__APP_KEY__";
+    const USER_ID = "test-user-001";
+
+    const Hoppr = HopprSDK.default;
+    const HopprTrigger = HopprSDK.HopprTrigger;
+
+    Hoppr.init(APP_KEY, USER_ID);
+
+    function triggerScreenEnter() {
+      Hoppr.trigger(HopprTrigger.ON_SCREEN_ENTER, { screenName: "HomeScreen" });
+    }
+
+    function triggerScreenExit() {
+      Hoppr.trigger(HopprTrigger.ON_SCREEN_EXIT, { screenName: "HomeScreen" });
+    }
+  </script>
+</body>
+
+</html>
