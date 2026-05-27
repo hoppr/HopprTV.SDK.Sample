@@ -14,13 +14,18 @@
 
   <script src="https://dev.hoppr.au/sdk/v__SDK_VERSION__/hoppr-sdk.umd.js"></script>
   <script>
-    const APP_KEY = "__APP_KEY__";
+    const STORAGE_KEY = 'hoppr-app-key';
     const USER_ID = "test-user-001";
 
     const Hoppr = HopprSDK.default;
     const HopprTrigger = HopprSDK.HopprTrigger;
 
-    Hoppr.init(APP_KEY, USER_ID);
+    const savedKey = localStorage.getItem(STORAGE_KEY) || '';
+    const appKey = prompt("Enter Hoppr APP Key:", savedKey);
+    if (appKey) {
+      localStorage.setItem(STORAGE_KEY, appKey);
+      Hoppr.init(appKey, USER_ID);
+    }
 
     function triggerScreenEnter() {
       Hoppr.trigger(HopprTrigger.ON_SCREEN_ENTER, { screenName: "HomeScreen" });

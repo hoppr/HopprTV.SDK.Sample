@@ -36,10 +36,6 @@ parameters:
     displayName: "JetStream App Key"
     type: string
     default: ""
-  - name: webCdnAppKey
-    displayName: "Web CDN App Key"
-    type: string
-    default: ""
 
 name: "RELEASE v${{ parameters.versionName }}"
 
@@ -197,8 +193,7 @@ stages:
 
           - script: |
               sed -i 's/__SDK_VERSION__/${{ parameters.versionName }}/g' index.html
-              sed -i 's/__APP_KEY__/${{ parameters.webCdnAppKey }}/g' index.html
-            displayName: "Inject version and app key"
+            displayName: "Inject version"
             workingDirectory: "$(System.DefaultWorkingDirectory)/Web-CDN"
 
           - task: ArchiveFiles@2
