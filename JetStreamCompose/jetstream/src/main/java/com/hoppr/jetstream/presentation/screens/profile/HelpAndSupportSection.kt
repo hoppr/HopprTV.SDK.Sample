@@ -25,6 +25,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.Icon
 import androidx.tv.material3.ListItem
@@ -32,10 +33,13 @@ import androidx.tv.material3.ListItemDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import androidx.tv.material3.surfaceColorAtElevation
+import com.hoppr.hopprtvandroid.Hoppr
 import com.hoppr.jetstream.ObserveHopprScreen
 import com.hoppr.jetstream.data.util.StringConstants
 import com.hoppr.jetstream.presentation.theme.JetStreamCardShape
 import com.hoppr.hopprtvandroid.core.model.HopprParameter
+import com.hoppr.hopprtvandroid.core.model.HopprTrigger
+import com.hoppr.jetstream.data.util.StringConstants.Composable.Placeholders.HelpAndSupportSectionRequestConsentItem
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
@@ -68,7 +72,14 @@ private fun HelpAndSupportSectionItem(
     ListItem(
         modifier = Modifier.padding(top = 16.dp),
         selected = false,
-        onClick = {},
+        onClick = {
+            if (title ==HelpAndSupportSectionRequestConsentItem)
+            {
+                Hoppr.trigger(HopprTrigger.ON_ELEMENT_CLICKED, bundleOf().apply {
+                    this.putString(HopprParameter.BUTTON_ID, "RequestConsent")
+                })
+            }
+        },
         trailingContent = {
             value?.let { nnValue ->
                 Text(
