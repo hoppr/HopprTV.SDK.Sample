@@ -118,6 +118,8 @@ object StringConstants {
             const val HelpAndSupportSectionPrivacyItem = "Privacy Policy"
             const val HelpAndSupportSectionContactItem = "Contact us on"
             const val HelpAndSupportSectionContactValue = "support@jetstream.com"
+
+            const val HelpAndSupportSectionRequestConsentItem = "Request Consent"
         }
 
         const val VideoPlayerControlPlaylistButton = "Playlist Button"

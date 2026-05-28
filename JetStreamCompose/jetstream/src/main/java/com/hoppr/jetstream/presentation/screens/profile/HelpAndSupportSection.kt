@@ -55,6 +55,7 @@ fun HelpAndSupportSection() {
                 title = HelpAndSupportSectionContactItem,
                 value = HelpAndSupportSectionContactValue
             )
+            HelpAndSupportSectionItem(title = HelpAndSupportSectionRequestConsentItem)
         }
     }
 }
