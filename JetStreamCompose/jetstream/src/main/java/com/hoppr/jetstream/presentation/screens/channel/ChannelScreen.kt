@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.media.tv.TvContract
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,13 +33,25 @@ import kotlinx.coroutines.withContext
 private const val TAG = "ChannelScreen"
 private const val CHANNEL_NAME = "JetStream"
 
-private data class TileInfo(val title: String, val description: String, val imageUrl: String)
+private const val DEEP_LINK_PREFIX = "https://arsmarttv.com/android/portal"
+
+private data class TileInfo(
+    val title: String,
+    val description: String,
+    val imageUrl: String,
+    val deeplink: String
+)
 
 private val sampleTiles = listOf(
-    TileInfo("Sample Movie 1", "An action-packed adventure", "https://picsum.photos/seed/jstile1/320/180"),
-    TileInfo("Sample Movie 2", "A heartwarming drama",       "https://picsum.photos/seed/jstile2/320/180"),
-    TileInfo("Sample Movie 3", "A thrilling mystery",        "https://picsum.photos/seed/jstile3/320/180")
+    TileInfo("Sample Movie 1", "An action-packed adventure", "https://picsum.photos/seed/jstile1/320/180", "$DEEP_LINK_PREFIX/program?id=1"),
+    TileInfo("Sample Movie 2", "A heartwarming drama",       "https://picsum.photos/seed/jstile2/320/180", "$DEEP_LINK_PREFIX/program?id=2"),
+    TileInfo("Sample Movie 3", "A thrilling mystery",        "https://picsum.photos/seed/jstile3/320/180", "$DEEP_LINK_PREFIX/program?id=3")
 )
+
+private fun tileIntentUri(deeplink: String): String =
+    Intent(Intent.ACTION_VIEW, Uri.parse(deeplink))
+        .addCategory(Intent.CATEGORY_BROWSABLE)
+        .toUri(Intent.URI_INTENT_SCHEME)
 
 @Composable
 fun ChannelScreen(
@@ -122,7 +135,7 @@ private suspend fun createLauncherChannel(context: Context): String = withContex
                 put(TvContractCompat.PreviewPrograms.COLUMN_SHORT_DESCRIPTION, tile.description)
                 put(TvContractCompat.PreviewPrograms.COLUMN_POSTER_ART_URI, tile.imageUrl)
                 put(TvContractCompat.PreviewPrograms.COLUMN_TYPE, TvContractCompat.PreviewPrograms.TYPE_MOVIE)
-                put(TvContractCompat.PreviewPrograms.COLUMN_INTENT_URI, appLinkUri)
+                put(TvContractCompat.PreviewPrograms.COLUMN_INTENT_URI, tileIntentUri(tile.deeplink))
             }
             context.contentResolver.insert(TvContractCompat.PreviewPrograms.CONTENT_URI, programValues)
         }
