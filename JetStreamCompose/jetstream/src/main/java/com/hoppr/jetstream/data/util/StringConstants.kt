@@ -52,6 +52,7 @@ object StringConstants {
             fun image(imageName: String) = "image of $imageName"
             const val MoviesCarousel = "Movies Carousel"
             const val UserAvatar = "User Profile Button"
+            const val searchItem = "Search Button"
             const val DashboardSearchButton = "Dashboard Search Button"
             const val BrandLogoImage = "Brand Logo Image"
             const val FilterSelected = "Filter Selected"

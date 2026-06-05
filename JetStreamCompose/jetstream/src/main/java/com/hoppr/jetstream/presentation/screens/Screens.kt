@@ -36,6 +36,7 @@ enum class Screens(
     Favourites(isTabItem = true),
     Video(isTabItem = true),
     Channel(isTabItem = true),
+    Banner(isTabItem = true),
     Search(isTabItem = true, tabIcon = Icons.Default.Search),
     CategoryMovieList(listOf(CategoryMovieListScreen.CategoryIdBundleKey)),
     MovieDetails(listOf(MovieDetailsScreen.MovieIdBundleKey)),
