@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -48,6 +49,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Icon
 import androidx.tv.material3.LocalContentColor
@@ -64,46 +66,61 @@ import com.hoppr.jetstream.presentation.theme.LexendExa
 import com.hoppr.jetstream.presentation.utils.occupyScreenSize
 
 val TopBarTabs = Screens.entries.toList().filter { it.isTabItem }
+val scrollableTopBarTabs = TopBarTabs.filter { it.tabIcon == null }
+val staticTopBarTabs = TopBarTabs.filter { it.tabIcon != null }
 
-// +1 for ProfileTab
-val TopBarFocusRequesters = List(size = TopBarTabs.size + 1) { FocusRequester() }
+// focusRequesters[0]   → Profile
+// focusRequesters[1-8] → Home to Banner (scrollable)
+// focusRequesters[9]   → Search (static)
+val TopBarFocusRequesters = List(
+    size = 1 + scrollableTopBarTabs.size + staticTopBarTabs.size
+) { FocusRequester() }
 
 private const val PROFILE_SCREEN_INDEX = -1
+const val STATIC_TAB_SCREEN_INDEX = -2
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DashboardTopBar(
     modifier: Modifier = Modifier,
     selectedTabIndex: Int,
+    tabsYOffsetPx: Int = 0,
     screens: List<Screens> = TopBarTabs,
-    focusRequesters: List<FocusRequester> = remember { TopBarFocusRequesters },
+    focusRequesters: List<FocusRequester> = TopBarFocusRequesters,
     onScreenSelection: (screen: Screens) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
+
+    val scrollableTabs = screens.filter { it.tabIcon == null }
+    val staticTabs = screens.filter { it.tabIcon != null }
+
     Box(modifier = modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)
-                .background(MaterialTheme.colorScheme.surface)
-                .focusRestorer(),
+                .background(MaterialTheme.colorScheme.surface),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Avatar
             UserAvatar(
                 modifier = Modifier
                     .size(32.dp)
-                    .clickable(onClick = {  onScreenSelection(Screens.Profile) })
+                    .clickable(onClick = { onScreenSelection(Screens.Profile) })
                     .focusRequester(focusRequesters[0])
                     .semantics {
                         contentDescription =
                             StringConstants.Composable.ContentDescription.UserAvatar
                     },
                 selected = selectedTabIndex == PROFILE_SCREEN_INDEX,
-                onClick = {
-                    onScreenSelection(Screens.Profile)
-                }
+                onClick = { onScreenSelection(Screens.Profile) }
             )
+
+            // Scrollable tabs row with offset
             Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .offset { IntOffset(x = 0, y = tabsYOffsetPx) },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 var isTabRowFocused by remember { mutableStateOf(false) }
@@ -111,12 +128,13 @@ fun DashboardTopBar(
                 Spacer(modifier = Modifier.width(20.dp))
                 TabRow(
                     modifier = Modifier
+                        .focusRestorer()
                         .onFocusChanged {
                             isTabRowFocused = it.isFocused || it.hasFocus
                         },
-                    selectedTabIndex = selectedTabIndex,
+                    selectedTabIndex = if (selectedTabIndex >= 0) selectedTabIndex else 0,
                     indicator = { tabPositions, _ ->
-                        if (selectedTabIndex >= 0) {
+                        if (selectedTabIndex >= 0 && selectedTabIndex < tabPositions.size) {
                             DashboardTopBarItemIndicator(
                                 currentTabPosition = tabPositions[selectedTabIndex],
                                 anyTabFocused = isTabRowFocused,
@@ -126,7 +144,8 @@ fun DashboardTopBar(
                     },
                     separator = { Spacer(modifier = Modifier) }
                 ) {
-                    screens.forEachIndexed { index, screen ->
+                    // Only text tabs (Home to Banner)
+                    scrollableTabs.forEachIndexed { index, screen ->
                         key(index) {
                             Tab(
                                 modifier = Modifier
@@ -136,31 +155,45 @@ fun DashboardTopBar(
                                 onFocus = { onScreenSelection(screen) },
                                 onClick = { focusManager.moveFocus(FocusDirection.Down) },
                             ) {
-                                if (screen.tabIcon != null) {
-                                    Icon(
-                                        screen.tabIcon,
-                                        modifier = Modifier.padding(4.dp),
-                                        contentDescription = StringConstants.Composable
-                                            .ContentDescription.DashboardSearchButton,
-                                        tint = LocalContentColor.current
+                                Text(
+                                    modifier = Modifier
+                                        .occupyScreenSize()
+                                        .padding(horizontal = 16.dp),
+                                    text = screen(),
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        color = LocalContentColor.current
                                     )
-                                } else {
-                                    Text(
-                                        modifier = Modifier
-                                            .occupyScreenSize()
-                                            .padding(horizontal = 16.dp),
-                                        text = screen(),
-                                        style = MaterialTheme.typography.titleSmall.copy(
-                                            color = LocalContentColor.current
-                                        )
-                                    )
-                                }
+                                )
                             }
                         }
                     }
                 }
             }
-            Spacer(modifier = Modifier.weight(1f))
+
+            // Static search icon — never scrolls, outside TabRow
+            staticTabs.forEachIndexed { index, screen ->
+                key(index) {
+                    Box(
+                        modifier = Modifier
+                            .height(32.dp)
+                            .focusRequester(focusRequesters[scrollableTabs.size + 1 + index])
+                            .clickable {
+                                onScreenSelection(screen)
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            screen.tabIcon!!,
+                            modifier = Modifier.padding(4.dp),
+                            contentDescription = StringConstants.Composable
+                                .ContentDescription.DashboardSearchButton,
+                            tint = LocalContentColor.current
+                        )
+                    }
+                }
+            }
+
+            // JetStream logo — always visible
             JetStreamLogo(
                 modifier = Modifier
                     .alpha(0.75f)

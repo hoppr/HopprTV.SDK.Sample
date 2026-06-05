@@ -70,6 +70,7 @@ import com.hoppr.jetstream.presentation.screens.channel.ChannelScreen
 import com.hoppr.jetstream.presentation.screens.video.VideoScreen
 import com.hoppr.jetstream.presentation.utils.Padding
 import com.hoppr.hopprtvandroid.Hoppr
+import com.hoppr.jetstream.presentation.screens.banner.BannerScreen
 
 val ParentPadding = PaddingValues(vertical = 16.dp, horizontal = 58.dp)
 
@@ -104,7 +105,17 @@ fun DashboardScreen(
     var currentDestination: String? by remember { mutableStateOf(null) }
     val currentTopBarSelectedTabIndex by remember(currentDestination) {
         derivedStateOf {
-            currentDestination?.let { TopBarTabs.indexOf(Screens.valueOf(it)) } ?: 0
+            currentDestination?.let {
+                try {
+                    val screen = Screens.valueOf(it)
+                    when {
+                        staticTopBarTabs.contains(screen) -> STATIC_TAB_SCREEN_INDEX
+                        else -> scrollableTopBarTabs.indexOf(screen)
+                    }
+                } catch (_: Exception) {
+                    0
+                }
+            } ?: 0
         }
     }
 
@@ -126,13 +137,24 @@ fun DashboardScreen(
         // 2. On second back press, bring focus back to the first displayed tab
         // 3. On third back press, exit the app
         onBackPressed = {
+            val focusIndex = when {
+                currentTopBarSelectedTabIndex >= 0 ->
+                    currentTopBarSelectedTabIndex + 1
+                currentTopBarSelectedTabIndex == STATIC_TAB_SCREEN_INDEX ->
+                    scrollableTopBarTabs.size + 1 // points to Search
+                else -> 1 // profile or unknown → focus first tab
+            }
+
             if (!isTopBarVisible) {
                 isTopBarVisible = true
-                TopBarFocusRequesters[currentTopBarSelectedTabIndex + 1].requestFocus()
-            } else if (currentTopBarSelectedTabIndex == 0) onBackPressed()
-            else if (!isTopBarFocused) {
-                TopBarFocusRequesters[currentTopBarSelectedTabIndex + 1].requestFocus()
-            } else TopBarFocusRequesters[1].requestFocus()
+                TopBarFocusRequesters[focusIndex].requestFocus()
+            } else if (currentTopBarSelectedTabIndex == 0) {
+                onBackPressed()
+            } else if (!isTopBarFocused) {
+                TopBarFocusRequesters[focusIndex].requestFocus()
+            } else {
+                TopBarFocusRequesters[1].requestFocus()
+            }
         }
     ) {
         // We do not want to focus the TopBar everytime we come back from another screen e.g.
@@ -163,7 +185,14 @@ fun DashboardScreen(
 
         LaunchedEffect(Unit) {
             if (!wasTopBarFocusRequestedBefore) {
-                TopBarFocusRequesters[currentTopBarSelectedTabIndex + 1].requestFocus()
+                val focusIndex = when {
+                    currentTopBarSelectedTabIndex >= 0 ->
+                        currentTopBarSelectedTabIndex + 1
+                    currentTopBarSelectedTabIndex == STATIC_TAB_SCREEN_INDEX ->
+                        scrollableTopBarTabs.size + 1
+                    else -> 1
+                }
+                TopBarFocusRequesters[focusIndex].requestFocus()
                 wasTopBarFocusRequestedBefore = true
             }
         }
@@ -183,13 +212,17 @@ fun DashboardScreen(
                     bottom = ParentPadding.calculateBottomPadding()
                 ),
             selectedTabIndex = currentTopBarSelectedTabIndex,
+            tabsYOffsetPx = topBarYOffsetPx,
         ) { screen ->
-            Hoppr.trigger("ON_TAB_SELECTED", bundleOf().apply {
-                putString("tabName", screen.name)
-            })
-            navController.navigate(screen()) {
-                if (screen == TopBarTabs[0]) popUpTo(TopBarTabs[0].invoke())
-                launchSingleTop = true
+            // Only navigate if destination is different
+            if (screen.invoke() != navController.currentDestination?.route) {
+                Hoppr.trigger("ON_TAB_SELECTED", bundleOf().apply {
+                    putString("tabName", screen.name)
+                })
+                navController.navigate(screen()) {
+                    if (screen == TopBarTabs[0]) popUpTo(TopBarTabs[0].invoke())
+                    launchSingleTop = true
+                }
             }
         }
 
@@ -288,6 +321,12 @@ private fun Body(
         }
         composable(Screens.Channel()) {
             ChannelScreen(
+                onScroll = updateTopBarVisibility,
+                isTopBarVisible = isTopBarVisible
+            )
+        }
+        composable(Screens.Banner()) {
+            BannerScreen(
                 onScroll = updateTopBarVisibility,
                 isTopBarVisible = isTopBarVisible
             )
