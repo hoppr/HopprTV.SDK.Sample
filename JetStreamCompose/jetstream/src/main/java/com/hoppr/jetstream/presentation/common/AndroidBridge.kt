@@ -21,7 +21,7 @@ import android.webkit.JavascriptInterface
 /**
  * Bridge exposed to the banner creative's JavaScript as `window.AndroidBridge`.
  *
- * The SpringServe banner HTML calls [onAdLoaded] once the creative is fetched
+ * The Ad server banner HTML calls [onAdLoaded] once the creative is fetched
  * and displayed, or [onAdFailed] on a no-fill / network / parsing error. These
  * methods are invoked on the WebView's JS bridge thread (NOT the main thread),
  * so callbacks must hop back to the main thread before touching UI/Compose state.
