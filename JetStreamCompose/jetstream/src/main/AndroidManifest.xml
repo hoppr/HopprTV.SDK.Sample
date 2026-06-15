@@ -28,6 +28,20 @@ https://www.apache.org/licenses/LICENSE-2.0
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"  />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+    <uses-permission android:name="android.permission.START_FOREGROUND_SERVICES_FROM_BACKGROUND"
+        tools:ignore="ProtectedPermissions" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- One or the other -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.START_ACTIVITIES_FROM_BACKGROUND"
+        tools:ignore="ProtectedPermissions" />
+
     <application
         android:name=".JetStreamApplication"
         android:allowBackup="true"
@@ -77,6 +91,29 @@ https://www.apache.org/licenses/LICENSE-2.0
                     android:pathPrefix="/android/portal" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name="com.hoppr.hopprtvandroid.service.BootCompletedReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:directBootAware="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <!--                <action android:name="timvision.telemetry.intent.action.ACTION_BOOT_COMPLETED"/>-->
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.hoppr.hopprtvandroid.service.HopprService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Advertising" />
+        </service>
     </application>
 
 </manifest>
