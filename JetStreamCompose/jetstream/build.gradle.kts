@@ -32,14 +32,14 @@ kotlin {
 android {
     namespace = "com.hoppr.jetstream"
     // Needed for latest androidx snapshot build
-    compileSdk = 36
+    compileSdk = 37
 
 
 
     defaultConfig {
         applicationId = "com.hoppr.jetstream"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 37
         versionCode = 2
         versionName = "1.0.1"
 
@@ -63,6 +63,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
+            isShrinkResources = true
             signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
