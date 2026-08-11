@@ -26,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +45,8 @@ fun CarouselBannerAdView(
 ) {
     var bannerAdData by remember { mutableStateOf<BannerAdResult.Success?>(null) }
     var webView by remember { mutableStateOf<WebView?>(null) }
+    var adLoaded by remember { mutableStateOf(false) }
+    val currentCentered by rememberUpdatedState(isCentered)
 
     LaunchedEffect(Unit) {
         Hoppr.requestBannerAd(adUnit) { result ->
@@ -59,10 +62,12 @@ fun CarouselBannerAdView(
         }
     }
 
-    LaunchedEffect(isCentered, bannerAdData) {
-        if (bannerAdData == null) return@LaunchedEffect
+    // Subsequent centered changes (the card sliding in/out of center) after the
+    // ad has loaded. The initial centered state is delivered by onAdLoaded below.
+    LaunchedEffect(isCentered) {
+        if (!adLoaded) return@LaunchedEffect
         webView?.evaluateJavascript(
-            "if(window.hopprSetCentered){window.hopprSetCentered($isCentered);}",
+            "window.hopprSetCentered($isCentered);",
             null
         )
     }
@@ -88,6 +93,27 @@ fun CarouselBannerAdView(
                         setBackgroundColor(android.graphics.Color.TRANSPARENT)
                         isFocusable = false
                         isFocusableInTouchMode = false
+                        addJavascriptInterface(
+                            AndroidBridge(
+                                onAdLoaded = {
+                                    Log.d(TAG, "AndroidBridge.onAdLoaded")
+                                    // Bridge thread -> hop to main, then tell the
+                                    // creative its current centered state so its
+                                    // gated impressions can fire.
+                                    post {
+                                        adLoaded = true
+                                        evaluateJavascript(
+                                            "window.hopprSetCentered($currentCentered);",
+                                            null
+                                        )
+                                    }
+                                },
+                                onAdFailed = { msg ->
+                                    Log.e(TAG, "AndroidBridge.onAdFailed: $msg")
+                                }
+                            ),
+                            "AndroidBridge"
+                        )
                         loadDataWithBaseURL(
                             banner.baseUrl,
                             banner.content,
