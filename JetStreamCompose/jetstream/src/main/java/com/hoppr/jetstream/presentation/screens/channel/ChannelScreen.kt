@@ -39,13 +39,16 @@ private data class TileInfo(
     val title: String,
     val description: String,
     val imageUrl: String,
-    val deeplink: String
+    val deeplink: String,
+    val weight: Int? = null,
 )
 
 private val sampleTiles = listOf(
-    TileInfo("Sample Movie 1", "An action-packed adventure", "https://picsum.photos/seed/jstile1/320/180", "$DEEP_LINK_PREFIX/program?id=1"),
-    TileInfo("Sample Movie 2", "A heartwarming drama",       "https://picsum.photos/seed/jstile2/320/180", "$DEEP_LINK_PREFIX/program?id=2"),
-    TileInfo("Sample Movie 3", "A thrilling mystery",        "https://picsum.photos/seed/jstile3/320/180", "$DEEP_LINK_PREFIX/program?id=3")
+    TileInfo("Sample Movie 1", "An action-packed adventure", "https://picsum.photos/seed/jstile1/320/180", "$DEEP_LINK_PREFIX/program?id=1", 20),
+    TileInfo("Sample Movie 2", "A heartwarming drama",       "https://picsum.photos/seed/jstile2/320/180", "$DEEP_LINK_PREFIX/program?id=2", 30),
+    TileInfo("Sample Movie 3", "A thrilling mystery 1",        "https://picsum.photos/seed/jstile3/320/180", "$DEEP_LINK_PREFIX/program?id=3", 40),
+    TileInfo("Sample Movie 4", "A thrilling mystery 2",        "https://picsum.photos/seed/jstile3/320/180", "$DEEP_LINK_PREFIX/program?id=4", null),
+    TileInfo("Sample Movie 5", "A thrilling mystery 3",        "https://picsum.photos/seed/jstile3/320/180", "$DEEP_LINK_PREFIX/program?id=5", 0),
 )
 
 private fun tileIntentUri(deeplink: String): String =
@@ -136,6 +139,9 @@ private suspend fun createLauncherChannel(context: Context): String = withContex
                 put(TvContractCompat.PreviewPrograms.COLUMN_POSTER_ART_URI, tile.imageUrl)
                 put(TvContractCompat.PreviewPrograms.COLUMN_TYPE, TvContractCompat.PreviewPrograms.TYPE_MOVIE)
                 put(TvContractCompat.PreviewPrograms.COLUMN_INTENT_URI, tileIntentUri(tile.deeplink))
+                tile.weight?.let { weight ->
+                    put(TvContractCompat.PreviewPrograms.COLUMN_WEIGHT, weight)
+                }
             }
             context.contentResolver.insert(TvContractCompat.PreviewPrograms.CONTENT_URI, programValues)
         }
