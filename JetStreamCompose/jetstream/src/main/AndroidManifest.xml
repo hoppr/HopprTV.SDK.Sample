@@ -92,6 +92,15 @@ https://www.apache.org/licenses/LICENSE-2.0
             </intent-filter>
         </activity>
 
+        <!-- The TV launcher asks the app to publish its channels after install. -->
+        <receiver
+            android:name=".channel.InitializeProgramsReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.tv.action.INITIALIZE_PROGRAMS" />
+            </intent-filter>
+        </receiver>
+
         <receiver
             android:name="com.hoppr.hopprtvandroid.service.BootCompletedReceiver"
             android:enabled="true"
