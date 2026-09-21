@@ -36,6 +36,10 @@ parameters:
     displayName: "JetStream App Key"
     type: string
     default: ""
+  - name: jetStreamPlatformSigned
+    displayName: "Sign JetStream with platform key"
+    type: boolean
+    default: false
 
 name: "RELEASE v${{ parameters.versionName }}"
 
@@ -98,9 +102,20 @@ stages:
               workingDirectory: "$(System.DefaultWorkingDirectory)/JetStreamCompose"
               gradleTask: "assembleRelease"
               publishPath: "$(System.DefaultWorkingDirectory)/JetStreamCompose/jetstream/build/outputs/apk"
-              publishName: "Hoppr-JetStream-v${{ parameters.versionName }}"
+              ${{ if parameters.jetStreamPlatformSigned }}:
+                publishName: "Hoppr-JetStream-v${{ parameters.versionName }}-platform"
+                extraGradleOptions: "-PsignWithPlatformKey=true"
+              ${{ else }}:
+                publishName: "Hoppr-JetStream-v${{ parameters.versionName }}"
               versionName: "${{ parameters.versionName }}"
               appKey: "${{ parameters.jetStreamAppKey }}"
+
+          - task: PublishPipelineArtifact@1
+            displayName: "Publish JetStream privapp permissions"
+            inputs:
+              targetPath: "$(System.DefaultWorkingDirectory)/JetStreamCompose/privapp/privapp-permissions-com.hoppr.jetstream.xml"
+              artifactName: "Hoppr-JetStream-v${{ parameters.versionName }}-privapp-permissions"
+              publishLocation: "pipeline"
 
       - job: Build_Web
         condition: ${{ or(eq(parameters.releaseType, 'Web'), eq(parameters.releaseType, 'All')) }}

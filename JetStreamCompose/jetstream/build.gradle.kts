@@ -60,11 +60,23 @@ android {
         buildConfigField("String", "APP_KEY","\"${project.findProperty("appKey") ?: localAppKey}\"")
     }
 
+    signingConfigs {
+        // AOSP test platform key, used when building with -PsignWithPlatformKey=true
+        create("platform") {
+            storeFile = rootProject.file("signing/testplatform.jks")
+            storePassword = "android"
+            keyAlias = "platform"
+            keyPassword = "android"
+        }
+    }
+
+    val signWithPlatformKey = project.findProperty("signWithPlatformKey")?.toString().toBoolean()
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName(if (signWithPlatformKey) "platform" else "debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

@@ -42,6 +42,13 @@ https://www.apache.org/licenses/LICENSE-2.0
     <uses-permission android:name="android.permission.START_ACTIVITIES_FROM_BACKGROUND"
         tools:ignore="ProtectedPermissions" />
 
+    <uses-permission
+        android:name="android.permission.SET_ACTIVITY_WATCHER"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
     <application
         android:name=".JetStreamApplication"
         android:allowBackup="true"
