@@ -111,13 +111,9 @@ https://www.apache.org/licenses/LICENSE-2.0
         <receiver
             android:name="com.hoppr.hopprtvandroid.service.BootCompletedReceiver"
             android:enabled="true"
-            android:exported="true"
-            android:directBootAware="true">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <!--                <action android:name="timvision.telemetry.intent.action.ACTION_BOOT_COMPLETED"/>-->
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
