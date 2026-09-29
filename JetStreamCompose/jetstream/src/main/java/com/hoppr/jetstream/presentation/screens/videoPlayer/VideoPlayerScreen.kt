@@ -17,6 +17,8 @@
 package com.hoppr.jetstream.presentation.screens.videoPlayer
 
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
@@ -27,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,9 +40,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.compose.PlayerSurface
+import androidx.media3.ui.compose.SURFACE_TYPE_SURFACE_VIEW
 import androidx.media3.ui.compose.SURFACE_TYPE_TEXTURE_VIEW
 import androidx.media3.ui.compose.modifiers.resizeWithContentScale
 import com.hoppr.jetstream.ObserveHopprScreen
@@ -104,16 +110,28 @@ fun VideoPlayerScreenContent(movieDetails: MovieDetails, onBackPressed: () -> Un
         putString(HopprParameter.SCREEN_NAME, "player")
     })
 
-    val exoPlayer = rememberPlayer(LocalContext.current)
+    val context = LocalContext.current
+    val exoPlayer = rememberPlayer(context)
+    val currentOnBackPressed by rememberUpdatedState(onBackPressed)
 
     val videoPlayerState = rememberVideoPlayerState(
         exoPlayer = exoPlayer,
         hideSeconds = 4,
     )
 
-    // Ensure the player is released when the screen exits
-    DisposableEffect(Unit) {
+    // Release the player on error and leave the screen; also release when the screen exits
+    DisposableEffect(exoPlayer) {
+        val listener = object : Player.Listener {
+            override fun onPlayerError(error: PlaybackException) {
+                Log.e("VideoPlayerScreen", "Playback error ${error.errorCodeName}", error)
+                exoPlayer.release()
+                Toast.makeText(context, "JetStream player error", Toast.LENGTH_SHORT).show()
+                currentOnBackPressed()
+            }
+        }
+        exoPlayer.addListener(listener)
         onDispose {
+            exoPlayer.removeListener(listener)
             exoPlayer.release()
         }
     }
@@ -169,7 +187,7 @@ fun VideoPlayerScreenContent(movieDetails: MovieDetails, onBackPressed: () -> Un
     ) {
         PlayerSurface(
             player = exoPlayer,
-            surfaceType = SURFACE_TYPE_TEXTURE_VIEW,
+            surfaceType = SURFACE_TYPE_SURFACE_VIEW,
             modifier = Modifier.resizeWithContentScale(
                 contentScale = ContentScale.Fit,
                 sourceSizeDp = null
