@@ -165,21 +165,10 @@ object LauncherChannelPublisher {
     }
 
     private fun safelyRequestChannelPin(context: Context, channelId: Long) {
-        if (isSystemApp(context)) return
-
         try {
             TvContract.requestChannelBrowsable(context, channelId)
         } catch (e: Exception) {
             Log.d(TAG, "Launcher pin request skipped: ${e.message}")
-        }
-    }
-
-    private fun isSystemApp(context: Context): Boolean {
-        return try {
-            val appInfo = context.packageManager.getApplicationInfo(context.packageName, 0)
-            (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-        } catch (e: Exception) {
-            false
         }
     }
 }
