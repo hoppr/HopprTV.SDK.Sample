@@ -38,7 +38,7 @@ android {
 
     defaultConfig {
         applicationId = "com.hoppr.jetstream"
-        minSdk = 28
+        minSdk = 24
         targetSdk = 37
         versionCode = 2
         versionName = "1.0.1"

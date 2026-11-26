@@ -6,13 +6,22 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.media.tv.TvContract
 import android.net.Uri
+import android.os.Build
 import android.util.Log
+import androidx.annotation.ChecksSdkIntAtLeast
+import androidx.annotation.RequiresApi
 import androidx.tvprovider.media.tv.TvContractCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 private const val TAG = "LauncherChannelPublisher"
 private const val CHANNEL_NAME = "JetStream"
+
+// Launcher preview channels were introduced in Android 8.0 (API 26).
+private const val UNSUPPORTED_MSG = "Launcher channels require Android 8.0 (API 26) or later"
+
+@ChecksSdkIntAtLeast(api = Build.VERSION_CODES.O)
+private fun channelsSupported(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
 private const val DEEP_LINK_PREFIX = "https://arsmarttv.com/android/portal"
 
@@ -47,6 +56,7 @@ object LauncherChannelPublisher {
      * Seeds the channel only if it is missing or has no programs yet. Safe to call repeatedly.
      */
     suspend fun initializeProgramsIfNeeded(context: Context): String = withContext(Dispatchers.IO) {
+        if (!channelsSupported()) return@withContext UNSUPPORTED_MSG
         val channelId = findChannelId(context)
         if (channelId != null && hasPrograms(context, channelId)) {
             return@withContext "Channel already populated; nothing to do"
@@ -55,6 +65,7 @@ object LauncherChannelPublisher {
     }
 
     suspend fun createLauncherChannel(context: Context): String = withContext(Dispatchers.IO) {
+        if (!channelsSupported()) return@withContext UNSUPPORTED_MSG
         try {
             val appLinkUri = Intent(Intent.ACTION_MAIN)
                 .apply { setPackage(context.packageName) }
@@ -100,6 +111,7 @@ object LauncherChannelPublisher {
     }
 
     suspend fun clearPrograms(context: Context): String = withContext(Dispatchers.IO) {
+        if (!channelsSupported()) return@withContext UNSUPPORTED_MSG
         try {
             val cursor = context.contentResolver.query(
                 TvContractCompat.PreviewPrograms.CONTENT_URI,
@@ -164,6 +176,7 @@ object LauncherChannelPublisher {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun safelyRequestChannelPin(context: Context, channelId: Long) {
         try {
             TvContract.requestChannelBrowsable(context, channelId)
